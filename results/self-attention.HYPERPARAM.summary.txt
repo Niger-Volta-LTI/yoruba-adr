@@ -1,0 +1,425 @@
+---------------------------------------------------------------------------------   1 1 512 GRU mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size 512 \
+                    -rnn_type GRU \
+                    -global_attention mlp \
+                    -epochs 30
+Train perplexity: 1.07928
+Train accuracy: 97.8106
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.86117
+Validation accuracy: 89.7488
+Decaying learning rate to 5.96046e-08
+
+--------------------------------------------------------------------------------- 2 2 512 LSTM mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size 512 \
+                    -rnn_type LSTM \
+                    -global_attention mlp \
+                    -epochs 30
+
+Train perplexity: 1.1411
+Train accuracy: 95.9402
+Validation perplexity: 1.85986
+Validation accuracy: 90.0841
+Decaying learning rate to 2.38419e-07
+--------------------------------------------------------------------------------- 2 2 512 LSTM dot
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size  512 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 30
+Train perplexity: 1.11471
+Train accuracy: 96.7113
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.79963
+Validation accuracy: 89.9298
+Decaying learning rate to 1.19209e-07
+---------------------------------------------------------------------------------  2 2 512 LSTM general
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size  512 \
+                    -rnn_type LSTM \
+                    -global_attention general \
+                    -epochs 30
+Train perplexity: 1.17066
+Train accuracy: 95.4642
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.72095
+Validation accuracy: 89.8752
+Decaying learning rate to 5.96046e-08
+
+
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+LSTM mlp num_layers experiments
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 3 3 512 LSTM mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 3 \
+                    -dec_layers 3 \
+                    -rnn_size 512 \
+                    -rnn_type LSTM \
+                    -global_attention mlp \
+                    -epochs 30
+Train perplexity: 1.17859
+Train accuracy: 95.063
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.90898
+Validation accuracy: 89.5107
+Decaying learning rate to 1.19209e-07
+--------------------------------------------------------------------------------- 4 4 512 LSTM mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 4 \
+                    -dec_layers 4 \
+                    -rnn_size 512 \
+                    -rnn_type LSTM \
+                    -global_attention mlp \
+                    -epochs 30
+Train perplexity: 1.47829
+Train accuracy: 90.6984
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.93247
+Validation accuracy: 87.2555
+Decaying learning rate to 3.8147e-06
+--------------------------------------------------------------------------------- 4 4 1024 LSTM mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 4 \
+                    -dec_layers 4 \
+                    -rnn_size 1024 \
+                    -rnn_type LSTM \
+                    -global_attention mlp \
+                    -epochs 31
+Train perplexity: 18.0406
+Train accuracy: 50.8887
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 17.9477
+Validation accuracy: 51.6697
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+GRU experiments
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 2 2 512 GRU mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size 512 \
+                    -rnn_type GRU \
+                    -global_attention mlp \
+                    -epochs 30
+Train perplexity: 1.14634
+Train accuracy: 96.2616
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.83567
+Validation accuracy: 89.7209
+Decaying learning rate to 1.19209e-07
+--------------------------------------------------------------------------------- 2 2 512 GRU general
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size  512 \
+                    -rnn_type GRU \
+                    -global_attention general \
+                    -epochs 25
+Train perplexity: 284.233
+Train accuracy: 10.4749
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 269.094
+Validation accuracy: 10.802
+Decaying learning rate to 5.96046e-08
+--------------------------------------------------------------------------------- 2 2 512 GRU dot
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 2 \
+                    -dec_layers 2 \
+                    -rnn_size  512 \
+                    -rnn_type GRU \
+                    -global_attention dot \
+                    -epochs 30
+Train perplexity: 301.093
+Train accuracy: 10.0669
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 294.659
+Validation accuracy: 10.0476
+Decaying learning rate to 3.72529e-09
+
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+various
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 1 1 256 GRU mlp
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  256 \
+                    -rnn_type GRU \
+                    -global_attention mlp \
+                    -epochs 30
+Train perplexity: 1.15334
+Train accuracy: 96.0493
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.82783
+Validation accuracy: 89.6543
+Decaying learning rate to 2.98023e-08
+--------------------------------------------------------------------------------- 1 1 256 LSTM dot
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  256 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 30
+Train perplexity: 1.15806
+Train accuracy: 96.1597
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.68506
+Validation accuracy: 90.0734
+Decaying learning rate to 2.98023e-08
+--------------------------------------------------------------------------------- 1 1 256 LSTM general
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  256 \
+                    -rnn_type LSTM \
+                    -global_attention general \
+                    -epochs 30
+Train perplexity: 1.32675
+Train accuracy: 93.4821
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.68664
+Validation accuracy: 89.6677
+Decaying learning rate to 7.45058e-09
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+different size enc dec layer
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 2 1 256 LSTM dot
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 2 \
+                    -dec_layers 1 \
+                    -rnn_size  256 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 30
+Train accuracy: 95.7865
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.75051
+Validation accuracy: 89.9351
+Decaying learning rate to 9.53674e-07
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+embedding layer
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 1 1 256 LSTM dot 100-embedding
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+      		   -word_vec_size 100 \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  256 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 30
+Train perplexity: 1.13839
+Train accuracy: 96.3937
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.72211
+Validation accuracy: 89.9604
+Decaying learning rate to 1.19209e-07
+
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+128 LSTM
+---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------- 1 1 128 LSTM dot
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  128 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 30
+
+Train perplexity: 1.31092
+Train accuracy: 93.6108
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.672
+Validation accuracy: 89.677
+Decaying learning rate to 5.96046e-08
+
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+ADAM optim
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  128 \
+                    -rnn_type LSTM \
+                    -global_attention dot \
+                    -epochs 50 \
+                    -optim adam \
+                    -learning_rate 0.001 \
+                    -start_decay_at 30
+
+Train perplexity: 1.25401
+Train accuracy: 94.4689
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.7265
+Validation accuracy: 89.6158
+
+---------------------------------------------------------------------------------
+python3.5 train.py -gpuid 0 \
+                   -data data/demo \
+                   -save_model models/yo_adr_bahdanau_gru_256 \
+                   -tensorboard  \
+                    -enc_layers 1 \
+                    -dec_layers 1 \
+                    -rnn_size  128 \
+                    -rnn_type GRU \
+                    -global_attention mlp \
+                    -epochs 50 \
+                    -optim adam \
+                    -learning_rate 0.001 \
+                    -start_decay_at 30
+Train perplexity: 1.1664
+Train accuracy: 95.4005
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.74198
+Validation accuracy: 89.838
+Decaying learning rate to 5.68434e-17
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+MARCH 15th
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+python3.6 train.py -gpuid 0 \
+	  -data data/demo \
+	  -save_model models/yo_adr_bahdanau_lstm_256_1_1 \
+	  -tensorboard  \
+	  -enc_layers 1 \
+	  -dec_layers 1 \
+	  -rnn_size  256 \
+	  -rnn_type LSTM \
+	  -global_attention dot \
+	  -epochs 30 \
+	  -optim adam \
+	  -learning_rate 0.001
+
+
+Loading train dataset from data/demo.train.1.pt, number of examples: 38692
+Epoch 10,    50/  605; acc:  95.03; ppl:   1.18; 12139 src tok/s; 12964 tgt tok/s;      4 s elapsed
+Epoch 10,   100/  605; acc:  95.08; ppl:   1.19; 12662 src tok/s; 13473 tgt tok/s;      8 s elapsed
+Epoch 10,   150/  605; acc:  95.10; ppl:   1.18; 12366 src tok/s; 13216 tgt tok/s;     12 s elapsed
+Epoch 10,   200/  605; acc:  95.21; ppl:   1.17; 12630 src tok/s; 13439 tgt tok/s;     16 s elapsed
+Epoch 10,   250/  605; acc:  95.53; ppl:   1.16; 12290 src tok/s; 13088 tgt tok/s;     20 s elapsed
+Epoch 10,   300/  605; acc:  95.53; ppl:   1.17; 12426 src tok/s; 13267 tgt tok/s;     23 s elapsed
+Epoch 10,   350/  605; acc:  95.59; ppl:   1.16; 12453 src tok/s; 13282 tgt tok/s;     27 s elapsed
+Epoch 10,   400/  605; acc:  95.58; ppl:   1.16; 12514 src tok/s; 13341 tgt tok/s;     31 s elapsed
+Epoch 10,   450/  605; acc:  95.74; ppl:   1.15; 12550 src tok/s; 13377 tgt tok/s;     35 s elapsed
+Epoch 10,   500/  605; acc:  95.95; ppl:   1.15; 12449 src tok/s; 13292 tgt tok/s;     39 s elapsed
+Epoch 10,   550/  605; acc:  96.00; ppl:   1.14; 12285 src tok/s; 13149 tgt tok/s;     42 s elapsed
+Epoch 10,   600/  605; acc:  95.73; ppl:   1.15; 12731 src tok/s; 13527 tgt tok/s;     46 s elapsed
+Train perplexity: 1.16403
+Train accuracy: 95.5087
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.69219
+Validation accuracy: 89.7927
+Decaying learning rate to 0.000125
+
+
+
+python3.6 train.py -gpuid 0 \
+          -data data/demo \
+          -save_model models/yo_adr_bahdanau_lstm_256_1_1 \
+          -tensorboard  \
+          -enc_layers 1 \
+          -dec_layers 1 \
+          -rnn_size  256 \
+          -rnn_type LSTM \
+          -global_attention dot \
+          -epochs 30 \
+          -optim adam \
+          -learning_rate 0.001 \
+          -learning_rate_decay 0.7
+
+Loading train dataset from data/demo.train.1.pt, number of examples: 38692
+Epoch 10,    50/  605; acc:  95.12; ppl:   1.19; 12249 src tok/s; 13019 tgt tok/s;      4 s elapsed
+Epoch 10,   100/  605; acc:  95.25; ppl:   1.19; 12339 src tok/s; 13207 tgt tok/s;      8 s elapsed
+Epoch 10,   150/  605; acc:  94.95; ppl:   1.19; 12472 src tok/s; 13296 tgt tok/s;     12 s elapsed
+Epoch 10,   200/  605; acc:  95.09; ppl:   1.18; 12503 src tok/s; 13342 tgt tok/s;     16 s elapsed
+Epoch 10,   250/  605; acc:  95.29; ppl:   1.18; 12561 src tok/s; 13384 tgt tok/s;     19 s elapsed
+Epoch 10,   300/  605; acc:  95.45; ppl:   1.17; 12470 src tok/s; 13307 tgt tok/s;     23 s elapsed
+Epoch 10,   350/  605; acc:  95.37; ppl:   1.17; 12441 src tok/s; 13270 tgt tok/s;     27 s elapsed
+Epoch 10,   400/  605; acc:  95.50; ppl:   1.17; 12574 src tok/s; 13403 tgt tok/s;     31 s elapsed
+Epoch 10,   450/  605; acc:  95.41; ppl:   1.17; 12476 src tok/s; 13302 tgt tok/s;     35 s elapsed
+Epoch 10,   500/  605; acc:  95.65; ppl:   1.16; 12541 src tok/s; 13365 tgt tok/s;     39 s elapsed
+Epoch 10,   550/  605; acc:  95.73; ppl:   1.16; 12387 src tok/s; 13232 tgt tok/s;     43 s elapsed
+Epoch 10,   600/  605; acc:  95.48; ppl:   1.17; 12621 src tok/s; 13433 tgt tok/s;     46 s elapsed
+Train perplexity: 1.17408
+Train accuracy: 95.3554
+Loading valid dataset from data/demo.valid.1.pt, number of examples: 5189
+Validation perplexity: 1.65979
+Validation accuracy: 89.8592
+Decaying learning rate to 3.125e-05
