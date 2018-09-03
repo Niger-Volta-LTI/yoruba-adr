@@ -9,14 +9,14 @@ rm data/*.pt
 rm -rf runs/*
 
 echo "[INFO] preprocess training data"
-python3.5 ./src/preprocess.py -train_src ./data/train/sources.txt \
+python3.6 ./src/preprocess.py -train_src ./data/train/sources.txt \
                         -train_tgt ./data/train/targets.txt \
                         -valid_src ./data/dev/sources.txt \
                         -valid_tgt ./data/dev/targets.txt \
                         -save_data ./data/demo
 
 echo "[INFO] running Bahdanau seq2seq training, for GPU training add: -gpuid 0 "
-python3.5 ./src/train.py \
+python3.6 ./src/train.py -gpuid 0 \
     -data data/demo \
     -save_model models/yo_adr_bahdanau_lstm_256_1_1 \
     -tensorboard  \
