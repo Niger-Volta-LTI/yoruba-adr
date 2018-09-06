@@ -133,8 +133,14 @@ optim.optimizer.state_dict()['param_groups'] element: {'lr': 1.0, 'momentum': 0,
 ```
 
 
-<!--## Performance
+## Training Performance
 
+Ongoing best-results will be updated here and the corpus grows and training accuracy improves. Below are [tensorboard](https://www.tensorflow.org/guide/summaries_and_tensorboard) summaries for the two models tested. 
+
+##### Soft-Attention:
+![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/soft-attention-tensorboard.png "WIP Soft-Attention training progress")
+
+##### Self-Attention
 ![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/Transformer_training_loss.png "WIP Transformer training loss")
 
-![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/Transformer_training_accuracy.png "WIP Transformer training accuracy")-->
+![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/Transformer_training_accuracy.png "WIP Transformer training accuracy")
