@@ -44,13 +44,13 @@ SOURCE_FILE_TEST="${OUTPUT_DIR_TEST}/test.txt"
 ### FOR LagosNWUspeech_corpus: 4315 lines => 80/10/10 split => train/dev/test => 3452/431/432
 echo ""
 echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-head -n 3452 "${SOURCE_BASE_DIR}/LagosNWUspeech_corpus/all_transcripts.txt" >>  ${SOURCE_FILE_TRAIN}
+head -n 3452 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" >>  ${SOURCE_FILE_TRAIN}
 
 echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-tail -n 863 "${SOURCE_BASE_DIR}/LagosNWUspeech_corpus/all_transcripts.txt" | head -n 431  >> ${SOURCE_FILE_DEV}
+tail -n 863 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" | head -n 431  >> ${SOURCE_FILE_DEV}
 
 echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-tail -n 863 "${SOURCE_BASE_DIR}/LagosNWUspeech_corpus/all_transcripts.txt" | tail -n 432  >> ${SOURCE_FILE_TEST}
+tail -n 863 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" | tail -n 432  >> ${SOURCE_FILE_TEST}
 echo "" >> ${SOURCE_FILE_TEST}
 
 
@@ -58,13 +58,13 @@ echo "" >> ${SOURCE_FILE_TEST}
 ### FOR TheYorubaBlog_corpus: 4135 lines => 80/10/10 split => train/dev/test => 3308/413/414
 echo ""
 echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-head -n 3308 "${SOURCE_BASE_DIR}/TheYorubaBlog_corpus/theyorubablog_dot_com.txt" >>  ${SOURCE_FILE_TRAIN}
+head -n 3308 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" >>  ${SOURCE_FILE_TRAIN}
 
 echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog_corpus/theyorubablog_dot_com.txt" | head -n 413  >> ${SOURCE_FILE_DEV}
+tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" | head -n 413  >> ${SOURCE_FILE_DEV}
 
 echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog_corpus/theyorubablog_dot_com.txt" | tail -n 414  >> ${SOURCE_FILE_TEST}
+tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" | tail -n 414  >> ${SOURCE_FILE_TEST}
 echo "" >> ${SOURCE_FILE_TEST}
 
 
@@ -72,13 +72,13 @@ echo "" >> ${SOURCE_FILE_TEST}
 ### FOR BibeliYoruba_corpus: 45713 lines => 80/10/10 split => train/dev/test => 36570/4570/4570
 echo "" 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-head -n 36570 "${SOURCE_BASE_DIR}/BibeliYoruba_corpus/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
+head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-tail -n 9143 "${SOURCE_BASE_DIR}/BibeliYoruba_corpus/bibeli_ede_yoruba.txt" | head -n 4571  >> ${SOURCE_FILE_DEV}
+tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | head -n 4571  >> ${SOURCE_FILE_DEV}
 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-tail -n 9143 "${SOURCE_BASE_DIR}/BibeliYoruba_corpus/bibeli_ede_yoruba.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
+tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
 echo "" >> ${SOURCE_FILE_TEST}
 
 # Verify split sums are sane: 43330/5415/5417
