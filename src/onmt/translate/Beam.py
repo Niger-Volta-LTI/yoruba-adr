@@ -1,6 +1,6 @@
 from __future__ import division
 import torch
-from onmt.translate import Penalties
+from onmt.translate import penalties
 
 
 class Beam(object):
@@ -93,8 +93,7 @@ class Beam(object):
                 word_probs[k][self._eos] = -1e20
         # Sum the previous scores.
         if len(self.prev_ks) > 0:
-            beam_scores = word_probs + \
-                self.scores.unsqueeze(1).expand_as(word_probs)
+            beam_scores = word_probs + self.scores.unsqueeze(1)
             # Don't let EOS have children.
             for i in range(self.next_ys[-1].size(0)):
                 if self.next_ys[-1][i] == self._eos:
@@ -111,7 +110,8 @@ class Beam(object):
                     gram = []
                     for i in range(le - 1):
                         # Last n tokens, n = block_ngram_repeat
-                        gram = (gram + [hyp[i]])[-self.block_ngram_repeat:]
+                        gram = (gram +
+                                [hyp[i].item()])[-self.block_ngram_repeat:]
                         # Skip the blocking if it is in the exclusion list
                         if set(gram) & self.exclusion_tokens:
                             continue
@@ -188,11 +188,11 @@ class GNMTGlobalScorer(object):
        beta (float):  coverage parameter
     """
 
-    def __init__(self, alpha, beta, cov_penalty, length_penalty):
-        self.alpha = alpha
-        self.beta = beta
-        penalty_builder = Penalties.PenaltyBuilder(cov_penalty,
-                                                   length_penalty)
+    def __init__(self, opt):
+        self.alpha = opt.alpha
+        self.beta = opt.beta
+        penalty_builder = penalties.PenaltyBuilder(opt.coverage_penalty,
+                                                   opt.length_penalty)
         # Term will be subtracted from probability
         self.cov_penalty = penalty_builder.coverage_penalty()
         # Probability will be divided by this

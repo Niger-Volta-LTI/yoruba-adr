@@ -1,37 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import argparse
-import os
+"""
+    Pre-process Data / features files and build vocabulary
+"""
+import codecs
+import configargparse
 import glob
 import sys
-
+import gc
+import os
 import torch
-
-import onmt.io
-import onmt.opts
-from onmt.Utils import get_logger
+from onmt.utils.logging import init_logger, logger
+from onmt.utils.misc import split_corpus
+import onmt.inputters as inputters
+import onmt.opts as opts
 
 
 def check_existing_pt_files(opt):
-    # We will use glob.glob() to find sharded {train|valid}.[0-9]*.pt
-    # when training, so check to avoid tampering with existing pt files
-    # or mixing them up.
+    """ Check if there are existing .pt files to avoid overwriting them """
+    pattern = opt.save_data + '.{}*.pt'
     for t in ['train', 'valid', 'vocab']:
-        pattern = opt.save_data + '.' + t + '*.pt'
-        if glob.glob(pattern):
-            sys.stderr.write("Please backup exisiting pt file: %s, "
-                             "to avoid tampering!\n" % pattern)
+        path = pattern.format(t)
+        if glob.glob(path):
+            sys.stderr.write("Please backup existing pt files: %s, "
+                             "to avoid overwriting them!\n" % path)
             sys.exit(1)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
+    parser = configargparse.ArgumentParser(
         description='preprocess.py',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        config_file_parser_class=configargparse.YAMLConfigFileParser,
+        formatter_class=configargparse.ArgumentDefaultsHelpFormatter)
 
-    onmt.opts.add_md_help_argument(parser)
-    onmt.opts.preprocess_opts(parser)
+    opts.config_opts(parser)
+    opts.add_md_help_argument(parser)
+    opts.preprocess_opts(parser)
 
     opt = parser.parse_args()
     torch.manual_seed(opt.seed)
@@ -41,163 +45,122 @@ def parse_args():
     return opt
 
 
-def build_save_text_dataset_in_shards(src_corpus, tgt_corpus, fields,
-                                      corpus_type, opt, logger=None):
-    '''
-    Divide the big corpus into shards, and build dataset separately.
-    This is currently only for data_type=='text'.
-
-    The reason we do this is to avoid taking up too much memory due
-    to sucking in a huge corpus file.
-
-    To tackle this, we only read in part of the corpus file of size
-    `max_shard_size`(actually it is multiples of 64 bytes that equals
-    or is slightly larger than this size), and process it into dataset,
-    then write it to disk along the way. By doing this, we only focus on
-    part of the corpus at any moment, thus effectively reducing memory use.
-    According to test, this method can reduce memory footprint by ~50%.
-
-    Note! As we process along the shards, previous shards might still
-    stay in memory, but since we are done with them, and no more
-    reference to them, if there is memory tight situation, the OS could
-    easily reclaim these memory.
-
-    If `max_shard_size` is 0 or is larger than the corpus size, it is
-    effectively preprocessed into one dataset, i.e. no sharding.
-
-    NOTE! `max_shard_size` is measuring the input corpus size, not the
-    output pt file size. So a shard pt file consists of examples of size
-    2 * `max_shard_size`(source + target).
-    '''
-
-    corpus_size = os.path.getsize(src_corpus)
-    if corpus_size > 10 * (1024**2) and opt.max_shard_size == 0:
-        if logger:
-            logger.info("Warning. The corpus %s is larger than 10M bytes, "
-                        "you can set '-max_shard_size' to process it by "
-                        "small shards to use less memory." % src_corpus)
-
-    if opt.max_shard_size != 0:
-        if logger:
-            logger.info(' * divide corpus into shards and build dataset '
-                        'separately (shard_size = %d bytes).'
-                        % opt.max_shard_size)
-
-    ret_list = []
-    src_iter = onmt.io.ShardedTextCorpusIterator(
-        src_corpus, opt.src_seq_length_trunc,
-        "src", opt.max_shard_size)
-    tgt_iter = onmt.io.ShardedTextCorpusIterator(
-        tgt_corpus, opt.tgt_seq_length_trunc,
-        "tgt", opt.max_shard_size,
-        assoc_iter=src_iter)
-
-    index = 0
-    while not src_iter.hit_end():
-        index += 1
-        dataset = onmt.io.TextDataset(
-            fields, src_iter, tgt_iter,
-            src_iter.num_feats, tgt_iter.num_feats,
-            src_seq_length=opt.src_seq_length,
-            tgt_seq_length=opt.tgt_seq_length,
-            dynamic_dict=opt.dynamic_dict)
-
-        # We save fields in vocab.pt seperately, so make it empty.
-        dataset.fields = []
-
-        pt_file = "{:s}.{:s}.{:d}.pt".format(
-            opt.save_data, corpus_type, index)
-        if logger:
-            logger.info(" * saving %s data shard to %s."
-                        % (corpus_type, pt_file))
-        torch.save(dataset, pt_file)
-
-        ret_list.append(pt_file)
-
-    return ret_list
-
-
-def build_save_dataset(corpus_type, fields, opt, logger=None):
+def build_save_dataset(corpus_type, fields, opt):
     assert corpus_type in ['train', 'valid']
 
     if corpus_type == 'train':
-        src_corpus = opt.train_src
-        tgt_corpus = opt.train_tgt
+        src = opt.train_src
+        tgt = opt.train_tgt
     else:
-        src_corpus = opt.valid_src
-        tgt_corpus = opt.valid_tgt
+        src = opt.valid_src
+        tgt = opt.valid_tgt
 
-    # Currently we only do preprocess sharding for corpus: data_type=='text'.
-    if opt.data_type == 'text':
-        return build_save_text_dataset_in_shards(
-            src_corpus, tgt_corpus, fields,
-            corpus_type, opt)
+    logger.info("Reading source and target files: %s %s." % (src, tgt))
 
-    # For data_type == 'img' or 'audio', currently we don't do
-    # preprocess sharding. We only build a monolithic dataset.
-    # But since the interfaces are uniform, it would be not hard
-    # to do this should users need this feature.
-    dataset = onmt.io.build_dataset(
-        fields, opt.data_type, src_corpus, tgt_corpus,
-        src_dir=opt.src_dir,
-        src_seq_length=opt.src_seq_length,
-        tgt_seq_length=opt.tgt_seq_length,
-        src_seq_length_trunc=opt.src_seq_length_trunc,
-        tgt_seq_length_trunc=opt.tgt_seq_length_trunc,
-        dynamic_dict=opt.dynamic_dict,
-        sample_rate=opt.sample_rate,
-        window_size=opt.window_size,
-        window_stride=opt.window_stride,
-        window=opt.window)
+    src_shards = split_corpus(src, opt.shard_size)
+    tgt_shards = split_corpus(tgt, opt.shard_size)
+    shard_pairs = zip(src_shards, tgt_shards)
+    dataset_paths = []
 
-    # We save fields in vocab.pt seperately, so make it empty.
-    dataset.fields = []
+    for i, (src_shard, tgt_shard) in enumerate(shard_pairs):
+        assert len(src_shard) == len(tgt_shard)
+        logger.info("Building shard %d." % i)
+        dataset = inputters.build_dataset(
+            fields, opt.data_type,
+            src=src_shard,
+            tgt=tgt_shard,
+            src_dir=opt.src_dir,
+            src_seq_len=opt.src_seq_length,
+            tgt_seq_len=opt.tgt_seq_length,
+            sample_rate=opt.sample_rate,
+            window_size=opt.window_size,
+            window_stride=opt.window_stride,
+            window=opt.window,
+            image_channel_size=opt.image_channel_size,
+            use_filter_pred=corpus_type == 'train' or opt.filter_valid
+        )
 
-    pt_file = "{:s}.{:s}.pt".format(opt.save_data, corpus_type)
-    if logger:
-        logger.info(" * saving %s dataset to %s." % (corpus_type, pt_file))
-    torch.save(dataset, pt_file)
+        data_path = "{:s}.{:s}.{:d}.pt".format(opt.save_data, corpus_type, i)
+        dataset_paths.append(data_path)
 
-    return [pt_file]
+        logger.info(" * saving %sth %s data shard to %s."
+                    % (i, corpus_type, data_path))
+
+        dataset.save(data_path)
+
+        del dataset.examples
+        gc.collect()
+        del dataset
+        gc.collect()
+
+    return dataset_paths
 
 
-def build_save_vocab(train_dataset, fields, opt, logger=None):
-    fields = onmt.io.build_vocab(train_dataset, fields, opt.data_type,
-                                 opt.share_vocab,
-                                 opt.src_vocab,
-                                 opt.src_vocab_size,
-                                 opt.src_words_min_frequency,
-                                 opt.tgt_vocab,
-                                 opt.tgt_vocab_size,
-                                 opt.tgt_words_min_frequency,
-                                 logger)
+def build_save_vocab(train_dataset, fields, opt):
+    fields = inputters.build_vocab(
+        train_dataset, fields, opt.data_type, opt.share_vocab,
+        opt.src_vocab, opt.src_vocab_size, opt.src_words_min_frequency,
+        opt.tgt_vocab, opt.tgt_vocab_size, opt.tgt_words_min_frequency,
+        vocab_size_multiple=opt.vocab_size_multiple
+    )
 
-    # Can't save fields, so remove/reconstruct at training time.
-    vocab_file = opt.save_data + '.vocab.pt'
-    torch.save(onmt.io.save_fields_to_vocab(fields), vocab_file)
+    vocab_path = opt.save_data + '.vocab.pt'
+    torch.save(fields, vocab_path)
+
+
+def count_features(path):
+    """
+    path: location of a corpus file with whitespace-delimited tokens and
+                    ￨-delimited features within the token
+    returns: the number of features in the dataset
+    """
+    with codecs.open(path, "r", "utf-8") as f:
+        first_tok = f.readline().split(None, 1)[0]
+        return len(first_tok.split(u"￨")) - 1
 
 
 def main():
     opt = parse_args()
-    logger = get_logger(opt.log_file)
+
+    assert opt.max_shard_size == 0, \
+        "-max_shard_size is deprecated. Please use \
+        -shard_size (number of examples) instead."
+    assert opt.shuffle == 0, \
+        "-shuffle is not implemented. Please shuffle \
+        your data before pre-processing."
+
+    assert os.path.isfile(opt.train_src) and os.path.isfile(opt.train_tgt), \
+        "Please check path of your train src and tgt files!"
+
+    assert os.path.isfile(opt.valid_src) and os.path.isfile(opt.valid_tgt), \
+        "Please check path of your valid src and tgt files!"
+
+    init_logger(opt.log_file)
     logger.info("Extracting features...")
 
-    src_nfeats = onmt.io.get_num_features(opt.data_type, opt.train_src, 'src')
-    tgt_nfeats = onmt.io.get_num_features(opt.data_type, opt.train_tgt, 'tgt')
+    src_nfeats = count_features(opt.train_src) if opt.data_type == 'text' \
+        else 0
+    tgt_nfeats = count_features(opt.train_tgt)  # tgt always text so far
     logger.info(" * number of source features: %d." % src_nfeats)
     logger.info(" * number of target features: %d." % tgt_nfeats)
 
     logger.info("Building `Fields` object...")
-    fields = onmt.io.get_fields(opt.data_type, src_nfeats, tgt_nfeats)
+    fields = inputters.get_fields(
+        opt.data_type,
+        src_nfeats,
+        tgt_nfeats,
+        dynamic_dict=opt.dynamic_dict,
+        src_truncate=opt.src_seq_length_trunc,
+        tgt_truncate=opt.tgt_seq_length_trunc)
 
     logger.info("Building & saving training data...")
-    train_dataset_files = build_save_dataset('train', fields, opt, logger)
-
-    logger.info("Building & saving vocabulary...")
-    build_save_vocab(train_dataset_files, fields, opt, logger)
+    train_dataset_files = build_save_dataset('train', fields, opt)
 
     logger.info("Building & saving validation data...")
-    build_save_dataset('valid', fields, opt, logger)
+    build_save_dataset('valid', fields, opt)
+
+    logger.info("Building & saving vocabulary...")
+    build_save_vocab(train_dataset_files, fields, opt)
 
 
 if __name__ == "__main__":

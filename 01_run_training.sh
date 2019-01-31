@@ -16,7 +16,8 @@ python3.6 ./src/preprocess.py -train_src ./data/train/sources.txt \
                         -save_data ./data/demo
 
 echo "[INFO] running Bahdanau seq2seq training, for GPU training add: -gpuid 0 "
-python3.6 ./src/train.py -gpuid 0 \
+# python3.6 ./src/train.py -gpuid 0 \
+python3.6 ./src/train.py \
     -data data/demo \
     -save_model models/yo_adr_bahdanau_lstm_256_1_1 \
     -tensorboard  \
@@ -25,7 +26,6 @@ python3.6 ./src/train.py -gpuid 0 \
     -rnn_size  128 \
     -rnn_type LSTM \
     -global_attention dot \
-    -epochs 30 \
     -optim adam \
     -learning_rate 0.001 \
     -learning_rate_decay 0.7

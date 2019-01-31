@@ -1,7 +1,8 @@
-from __future__ import division, unicode_literals
+""" Translation main class """
+from __future__ import unicode_literals, print_function
 
 import torch
-import onmt.io
+from onmt.inputters.text_dataset import TextDataset
 
 
 class TranslationBuilder(object):
@@ -29,21 +30,22 @@ class TranslationBuilder(object):
         self.has_tgt = has_tgt
 
     def _build_target_tokens(self, src, src_vocab, src_raw, pred, attn):
-        vocab = self.fields["tgt"].vocab
+        tgt_field = self.fields["tgt"][0][1].base_field
+        vocab = tgt_field.vocab
         tokens = []
         for tok in pred:
             if tok < len(vocab):
                 tokens.append(vocab.itos[tok])
             else:
                 tokens.append(src_vocab.itos[tok - len(vocab)])
-            if tokens[-1] == onmt.io.EOS_WORD:
+            if tokens[-1] == tgt_field.eos_token:
                 tokens = tokens[:-1]
                 break
-        if self.replace_unk and (attn is not None) and (src is not None):
+        if self.replace_unk and attn is not None and src is not None:
             for i in range(len(tokens)):
-                if tokens[i] == vocab.itos[onmt.io.UNK]:
+                if tokens[i] == tgt_field.unk_token:
                     _, max_index = attn[i].max(0)
-                    tokens[i] = src_raw[max_index[0]]
+                    tokens[i] = src_raw[max_index.item()]
         return tokens
 
     def from_batch(self, translation_batch):
@@ -61,24 +63,20 @@ class TranslationBuilder(object):
                     key=lambda x: x[-1])))
 
         # Sorting
-        inds, perm = torch.sort(batch.indices.data)
-        data_type = self.data.data_type
-        if data_type == 'text':
-            src = batch.src[0].data.index_select(1, perm)
+        inds, perm = torch.sort(batch.indices)
+        if isinstance(self.data, TextDataset):
+            src = batch.src[0][:, :, 0].index_select(1, perm)
         else:
             src = None
-
-        if self.has_tgt:
-            tgt = batch.tgt.data.index_select(1, perm)
-        else:
-            tgt = None
+        tgt = batch.tgt[:, :, 0].index_select(1, perm) \
+            if self.has_tgt else None
 
         translations = []
         for b in range(batch_size):
-            if data_type == 'text':
+            if isinstance(self.data, TextDataset):
                 src_vocab = self.data.src_vocabs[inds[b]] \
                     if self.data.src_vocabs else None
-                src_raw = self.data.examples[inds[b]].src
+                src_raw = self.data.examples[inds[b]].src[0]
             else:
                 src_vocab = None
                 src_raw = None
@@ -94,10 +92,11 @@ class TranslationBuilder(object):
                     src_vocab, src_raw,
                     tgt[1:, b] if tgt is not None else None, None)
 
-            translation = Translation(src[:, b] if src is not None else None,
-                                      src_raw, pred_sents,
-                                      attn[b], pred_score[b], gold_sent,
-                                      gold_score[b])
+            translation = Translation(
+                src[:, b] if src is not None else None,
+                src_raw, pred_sents, attn[b], pred_score[b],
+                gold_sent, gold_score[b]
+            )
             translations.append(translation)
 
         return translations
