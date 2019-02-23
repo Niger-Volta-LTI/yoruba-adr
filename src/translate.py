@@ -1,33 +1,42 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import division, unicode_literals
-import argparse
+from __future__ import unicode_literals
+import configargparse
+from onmt.utils.logging import init_logger
+from onmt.utils.misc import split_corpus
+from onmt.translate.translator import build_translator
 
-from onmt.translate.Translator import make_translator
-from onmt.Utils import get_logger
-
-import onmt.io
-import onmt.translate
-import onmt
-import onmt.ModelConstructor
-import onmt.modules
-import onmt.opts
+import onmt.opts as opts
 
 
 def main(opt):
-    translator = make_translator(opt, report_score=True, logger=logger)
-    translator.translate(opt.src_dir, opt.src, opt.tgt,
-                         opt.batch_size, opt.attn_debug)
+    translator = build_translator(opt, report_score=True)
+    src_shards = split_corpus(opt.src, opt.shard_size)
+    tgt_shards = split_corpus(opt.tgt, opt.shard_size) \
+        if opt.tgt is not None else [None]*opt.shard_size
+    shard_pairs = zip(src_shards, tgt_shards)
+
+    for i, (src_shard, tgt_shard) in enumerate(shard_pairs):
+        logger.info("Translating shard %d." % i)
+        translator.translate(
+            src=src_shard,
+            tgt=tgt_shard,
+            src_dir=opt.src_dir,
+            batch_size=opt.batch_size,
+            attn_debug=opt.attn_debug
+            )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
+    parser = configargparse.ArgumentParser(
         description='translate.py',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    onmt.opts.add_md_help_argument(parser)
-    onmt.opts.translate_opts(parser)
+        config_file_parser_class=configargparse.YAMLConfigFileParser,
+        formatter_class=configargparse.ArgumentDefaultsHelpFormatter)
+    opts.config_opts(parser)
+    opts.add_md_help_argument(parser)
+    opts.translate_opts(parser)
 
     opt = parser.parse_args()
-    logger = get_logger(opt.log_file)
+    logger = init_logger(opt.log_file)
     main(opt)
