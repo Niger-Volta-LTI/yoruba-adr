@@ -26,6 +26,17 @@ Now with a large digital corpus with correct diacritics that can be used for tra
 
 Yorùbá is a widely spoken West African language with a writing system rich in tonal and orthographic diacritics. With very few exceptions, diacritics are omitted from electronic texts, due to limited device and application support. Diacritics provide morphological information, are crucial for lexical disambiguation, pronunciation and are vital for any Yorùbá text-to-speech (TTS), automatic speech recognition (ASR) and natural language processing (NLP) tasks. Reframing Automatic Diacritic Restoration (ADR) as a machine translation task, we experiment with two different attentive Sequence-to-Sequence neural models to process undiacritized text. We have released pre-trained models, datasets and source-code as an open-source project to advance efforts on Yorùbá language technology.
 
+If you use this code in your research please cite:
+```
+@article{orife2018attentive,
+  title={Attentive Sequence-to-Sequence Learning for Diacritic Restoration of Yor{\`u}B{\'a} Language Text},
+  author={Orife, Iroro},
+  journal={Proc. Interspeech 2018},
+  pages={2848--2852},
+  year={2018}
+}
+```
+
 
 ## Computing Setup
 We train models on an Amazon EC2 `p2.xlarge` instance running `Deep Learning AMI (Ubuntu) Version 5.0 (ami-c27af5ba)`. These machine-images (AMI) have Python3 and PyTorch pre-installed as well as CUDA for training on the GPU. We use the [OpenNMT-py](https://github.com/OpenNMT/OpenNMT-py) framework for training and restoration.  
