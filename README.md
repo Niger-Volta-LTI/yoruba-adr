@@ -5,40 +5,52 @@
 Nigeria’s dying languages, Warri carry last:
 https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last/
 
-### Orthographic diacritics & multilingual computing
-http://www.phon.ucl.ac.uk/home/wells/dia/diacritics-revised.htm
-
 ### Applications
 
-Very large Yorùbá text corpus generation (10M words) via the following process:
-  
-[physical books] → OCR → [undiacritized text] → ADR → [clean diacritized text]  
+* Generating very large, high quality Yorùbá text corpora
+    * [physical books] → OCR → [undiacritized text] → ADR → [clean diacritized text]  Physical books written in Yorùbá (novels, manuals, school books, dictionaries) are digitized via [Optical Character Recognition](https://en.wikipedia.org/wiki/Optical_character_recognition) (OCR), which may not fully respect tonal or orthographic diacritics. Next, the undiacritized text is processed to restore the correct diacritics. 
+    * Correcting digital texts scraped online on Twitter, Naija forums, articles, etc
+    * Suggesting corrections during manual text entry (spell/diacritic checker)
+    
+* Preprocessing text for training Yorùbá
+    * language models
+    * word embeddings 
+    * text-language identification (so Twitter can stop claiming Yorùbá text is Vietnamese haba!)
+    * part-of-speech taggers
+    * named-entity recognition
+    * text-to-speech (TTS) models ([speech synthesis](https://keithito.com/LJ-Speech-Dataset/) )
+    * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/)
 
-In this case, physical books written in Yorùbá (novels, manuals, school books, dictionaries) are digitized via [Optical Character Recognition](https://en.wikipedia.org/wiki/Optical_character_recognition) (OCR), which does not respect tonal or orthographic diacritics. Next, the undiacritized text is processed to restore the correct diacritics. 
+### Quickstart
+Test a prebuilt model with your own undiacritzed Yorùbá text
 
-Now with a large digital corpus with correct diacritics that can be used for training language models, word embeddings, fixing inputs to Text-To-Speech (TTS) programs, correcting text as well as seeding text for audio labeling for ASR, we can envision a Yorùbá analogue of the English TTS dataset [LJ Speech](https://keithito.com/LJ-Speech-Dataset/) or the ASR corpus [Librispeech](http://www.openslr.org/12/).
+1) From the top-level directory, download a prebuilt model to the `./models` directory with `curl`:
 
-## Datasets
+    `$ curl -L "https://dl.bintray.com/ruohoruotsi/prebuilt-models/yo_adr_bahdanau_lstm_256_1_1_step_100000.pt" -o yo_adr_bahdanau_lstm_256_1_1_step_100000.pt`
+2) Run the prediction script, which uses `./data/test/one_phrase.txt` and writes output file `./data/test/pred.txt`. Results are also written to terminal stdout:
+
+    `$ ./02_run_prediction.sh`
+    
+    Terminal output should ressemble the following:
+    ```
+    [INFO] running inference on test sources
+    [2019-04-18 00:44:08,754 INFO] Translating shard 0.
+    SENT 1: ['awon', 'okunrin', 'nse', 'ise', 'agbara', 'bi', 'ise', 'ode']
+    PRED 1: àwọn ọkùnrin nṣe iṣẹ́ agbára bí iṣẹ́ ọdẹ
+    PRED SCORE: -0.8820
+    PRED AVG SCORE: -0.1102, PRED PPL: 1.1166
+    ```
+    Verify the contents of the output file
+    ```
+    $ cat data/test/pred.txt
+    àwọn ọkùnrin nṣe iṣẹ́ agbára bí iṣẹ́ ọdẹ
+    ```
+    
+### Datasets
 [https://github.com/Niger-Volta-LTI/yoruba-text](https://github.com/Niger-Volta-LTI/yoruba-text)
 
-## Interspeech 2018 Paper
-[Attentive Sequence-to-Sequence Learning for Diacritic Restoration of Yorùbá Language Text](https://arxiv.org/abs/1804.00832)
 
-Yorùbá is a widely spoken West African language with a writing system rich in tonal and orthographic diacritics. With very few exceptions, diacritics are omitted from electronic texts, due to limited device and application support. Diacritics provide morphological information, are crucial for lexical disambiguation, pronunciation and are vital for any Yorùbá text-to-speech (TTS), automatic speech recognition (ASR) and natural language processing (NLP) tasks. Reframing Automatic Diacritic Restoration (ADR) as a machine translation task, we experiment with two different attentive Sequence-to-Sequence neural models to process undiacritized text. We have released pre-trained models, datasets and source-code as an open-source project to advance efforts on Yorùbá language technology.
-
-If you use this code in your research please cite:
-```
-@article{orife2018attentive,
-  title={Attentive Sequence-to-Sequence Learning for Diacritic Restoration of Yor{\`u}B{\'a} Language Text},
-  author={Orife, Iroro},
-  journal={Proc. Interspeech 2018},
-  pages={2848--2852},
-  year={2018}
-}
-```
-
-
-## Computing Setup
+### Train a Yorùbá ADR model
 We train models on an Amazon EC2 `p2.xlarge` instance running `Deep Learning AMI (Ubuntu) Version 5.0 (ami-c27af5ba)`. These machine-images (AMI) have Python3 and PyTorch pre-installed as well as CUDA for training on the GPU. We use the [OpenNMT-py](https://github.com/OpenNMT/OpenNMT-py) framework for training and restoration.  
 
 * To install PyTorch 0.4 manually, [follow instructions](https://pytorch.org/) for your {OS, package manager, python, CUDA} versions
@@ -57,8 +69,8 @@ We train models on an Amazon EC2 `p2.xlarge` instance running `Deep Learning AMI
   	>>> nltk.download('punkt')
 	```
 
-## Model Training
-To start data-prep and training of the Bahdanau-style soft-attention model, execute the training script from the base directory: `./01_run_training.sh`
+#### Training an ADR sequence-to-sequence model
+To start data-prep and training of the Bahdanau-style soft-attention model, execute the training script from the top-level  directory: `./01_run_training.sh`
 
 Training logging should ressemble the following:
 
@@ -144,7 +156,7 @@ optim.optimizer.state_dict()['param_groups'] element: {'lr': 1.0, 'momentum': 0,
 ```
 
 
-## Training Performance
+### Training Performance
 
 Ongoing best-results will be updated here and the corpus grows and training accuracy improves. Below are [tensorboard](https://www.tensorflow.org/guide/summaries_and_tensorboard) summaries for the two models tested. 
 
@@ -155,3 +167,23 @@ Ongoing best-results will be updated here and the corpus grows and training accu
 ![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/Transformer_training_loss.png "WIP Transformer training loss")
 
 ![alt text](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/docs/Transformer_training_accuracy.png "WIP Transformer training accuracy")
+
+
+## Learn more
+* **Orthographic diacritics & multilingual computing**: http://www.phon.ucl.ac.uk/home/wells/dia/diacritics-revised.htm
+
+* **Interspeech 2018 Paper**: [Attentive Sequence-to-Sequence Learning for Diacritic Restoration of Yorùbá Language Text](https://arxiv.org/abs/1804.00832)
+
+    **Abstract** &rarr;
+    _Yorùbá is a widely spoken West African language with a writing system rich in tonal and orthographic diacritics. With very few exceptions, diacritics are omitted from electronic texts, due to limited device and application support. Diacritics provide morphological information, are crucial for lexical disambiguation, pronunciation and are vital for any Yorùbá text-to-speech (TTS), automatic speech recognition (ASR) and natural language processing (NLP) tasks. Reframing Automatic Diacritic Restoration (ADR) as a machine translation task, we experiment with two different attentive Sequence-to-Sequence neural models to process undiacritized text. We have released pre-trained models, datasets and source-code as an open-source project to advance efforts on Yorùbá language technology._
+
+    If you use this code in your research please cite:
+    ```
+    @article{orife2018attentive,
+      title={Attentive Sequence-to-Sequence Learning for Diacritic Restoration of Yor{\`u}B{\'a} Language Text},
+      author={Orife, Iroro},
+      journal={Proc. Interspeech 2018},
+      pages={2848--2852},
+      year={2018}
+    }
+    ```
