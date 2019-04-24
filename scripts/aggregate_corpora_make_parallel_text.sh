@@ -81,6 +81,21 @@ echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
 tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
 echo "" >> ${SOURCE_FILE_TEST}
 
+
+###############################################################################################################
+### FOR Iroyin (news): 1738 lines => 80/10/10 split => train/dev/test => 1371/171/171
+echo "" 
+echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
+head -n 1371 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" >>  ${SOURCE_FILE_TRAIN}
+
+echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
+tail -n 342 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" | head -n 171  >> ${SOURCE_FILE_DEV}
+
+echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
+tail -n 342 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" | tail -n 171  >> ${SOURCE_FILE_TEST}
+echo "" >> ${SOURCE_FILE_TEST}
+
+
 # Verify split sums are sane: 43330/5415/5417
 cat ${SOURCE_FILE_TRAIN} | wc -l
 cat ${SOURCE_FILE_DEV}   | wc -l 
