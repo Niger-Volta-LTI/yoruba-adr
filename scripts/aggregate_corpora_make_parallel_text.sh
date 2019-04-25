@@ -96,6 +96,30 @@ tail -n 342 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" | tail -n 171  >> ${SOURC
 echo "" >> ${SOURCE_FILE_TEST}
 
 
+SOURCE_BASE_DIR="${BASE_DIR}/../yoruba-text-reserve"
+echo "Changing to use SOURCE_TEXT_BASE_DIR=${SOURCE_BASE_DIR}"
+
+### Check if a directory does not exist ###
+if [ ! -d "${SOURCE_BASE_DIR}" ] 
+then
+    echo "Directory ${SOURCE_BASE_DIR} DOES NOT exist" 
+    exit -99
+fi
+
+###############################################################################################################
+### FOR Kọ́lá Túbọ̀sún interiews: 4001 lines => 80/10/10 split => train/dev/test => 3201/400/400
+echo "" 
+echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
+head -n 3201 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" >>  ${SOURCE_FILE_TRAIN}
+
+echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
+tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | head -n 400  >> ${SOURCE_FILE_DEV}
+
+echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
+tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | tail -n 400  >> ${SOURCE_FILE_TEST}
+echo "" >> ${SOURCE_FILE_TEST}
+
+
 # Verify split sums are sane: 43330/5415/5417
 cat ${SOURCE_FILE_TRAIN} | wc -l
 cat ${SOURCE_FILE_DEV}   | wc -l 
