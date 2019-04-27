@@ -21,8 +21,11 @@ https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last/
     * text-to-speech (TTS) models ([speech synthesis](https://keithito.com/LJ-Speech-Dataset/) )
     * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/)
 
-### Quickstart
-Test a prebuilt model with your own undiacritzed Yorùbá text
+### Quickstart option #1
+Correct diacritics with this [Jupyter notebook](http://github.com/Niger-Volta-LIT/yoruba-adr/correct_yoruba_diacritics.ipynb)
+
+### Quickstart option #2
+Correct diacritics executing steps in the terminal
 
 1) From the top-level directory, download a prebuilt model to the `./models` directory with `curl`:
 
