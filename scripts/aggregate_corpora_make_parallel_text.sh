@@ -32,9 +32,9 @@ OUTPUT_DIR_DEV="${OUTPUT_DIR}/dev"
 OUTPUT_DIR_TEST="${OUTPUT_DIR}/test"
 
 # start afresh each time
-rm -rf $OUTPUT_DIR_TRAIN; mkdir $OUTPUT_DIR_TRAIN
-rm -rf $OUTPUT_DIR_DEV;   mkdir $OUTPUT_DIR_DEV
-rm -rf $OUTPUT_DIR_TEST;  mkdir $OUTPUT_DIR_TEST
+mkdir -p $OUTPUT_DIR_TRAIN; rm -rf $OUTPUT_DIR_TRAIN/sources.txt $OUTPUT_DIR_TRAIN/targets.txt
+mkdir -p $OUTPUT_DIR_DEV;   rm -rf $OUTPUT_DIR_DEV/sources.txt   $OUTPUT_DIR_DEV/targets.txt
+mkdir -p $OUTPUT_DIR_TEST;  rm -rf $OUTPUT_DIR_TEST/sources.txt  $OUTPUT_DIR_TEST/targets.txt
 
 SOURCE_FILE_TRAIN="${OUTPUT_DIR_TRAIN}/train.txt"
 SOURCE_FILE_DEV="${OUTPUT_DIR_DEV}/dev.txt"
