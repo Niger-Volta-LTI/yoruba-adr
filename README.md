@@ -22,7 +22,7 @@ https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last/
     * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/)
 
 ### Quickstart option #1
-Correct diacritics with this [Jupyter notebook](http://github.com/Niger-Volta-LIT/yoruba-adr/correct_yoruba_diacritics.ipynb)
+Correct diacritics with this [Jupyter notebook](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/correct_yoruba_diacritics.ipynb)
 
 ### Quickstart option #2
 Correct diacritics executing steps in the terminal
