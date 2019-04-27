@@ -149,6 +149,13 @@ ${PYTHON} translate.py -model ${TEST_DIR}/test_model.pt -src /tmp/src-test.txt -
 [ "$?" -eq 0 ] || error_exit
 echo "Succeeded" | tee -a ${LOG_FILE}
 
+echo -n "  [+] Testing NMT ensemble translation..."
+head ${DATA_DIR}/src-test.txt > /tmp/src-test.txt
+${PYTHON} translate.py -model ${TEST_DIR}/test_model.pt ${TEST_DIR}/test_model.pt \
+            -src /tmp/src-test.txt -verbose >> ${LOG_FILE} 2>&1
+[ "$?" -eq 0 ] || error_exit
+echo "Succeeded" | tee -a ${LOG_FILE}
+
 echo -n "  [+] Testing img2text translation..."
 head /tmp/im2text/src-val.txt > /tmp/im2text/src-val-head.txt
 head /tmp/im2text/tgt-val.txt > /tmp/im2text/tgt-val-head.txt
@@ -268,6 +275,65 @@ ${PYTHON} preprocess.py -data_type audio \
 ${PYTHON} train.py -model_type audio \
 	        -data /tmp/speech/q -rnn_size 2 -batch_size 10 \
 		-word_vec_size 5 -report_every 5 -rnn_size 10 -train_steps 10  >> ${LOG_FILE} 2>&1
+[ "$?" -eq 0 ] || error_exit
+echo "Succeeded" | tee -a ${LOG_FILE}
+
+
+echo -n "[+] Doing create vocabulary {preprocess + create_vocabulary} test..."
+rm /tmp/src-train.txt
+rm /tmp/tgt-train.txt
+rm /tmp/src-val.txt
+rm /tmp/tgt-val.txt
+head ${DATA_DIR}/src-train.txt > /tmp/src-train.txt
+head ${DATA_DIR}/tgt-train.txt > /tmp/tgt-train.txt
+head ${DATA_DIR}/src-val.txt > /tmp/src-val.txt
+head ${DATA_DIR}/tgt-val.txt > /tmp/tgt-val.txt
+
+rm -rf /tmp/q*pt
+${PYTHON} preprocess.py -train_src /tmp/src-train.txt \
+		     -train_tgt /tmp/tgt-train.txt \
+		     -valid_src /tmp/src-val.txt \
+		     -valid_tgt /tmp/tgt-val.txt \
+		     -save_data /tmp/q >> ${LOG_FILE} 2>&1
+PYTHONPATH=${PROJECT_ROOT}:${PYTHONPATH} ${PYTHON} ./tools/create_vocabulary.py -file /tmp/q.vocab.pt \
+        -file_type field -out_file /tmp/vocab.txt -side src       >> ${LOG_FILE} 2>&1
+[ "$?" -eq 0 ] || error_exit
+if ! wc -l /tmp/vocab.txt | grep -qF  "181"; then
+    echo -n "wrong word count\n" >> ${LOG_FILE}
+    wc -l /tmp/vocab.txt >> ${LOG_FILE}
+    error_exit
+fi
+echo "Succeeded" | tee -a ${LOG_FILE}
+
+
+echo -n "[+] Doing embedding to torch {preprocess + embeddings_to_torch} test..."
+rm /tmp/src-train.txt
+rm /tmp/tgt-train.txt
+rm /tmp/src-val.txt
+rm /tmp/tgt-val.txt
+head ${DATA_DIR}/src-train.txt > /tmp/src-train.txt
+head ${DATA_DIR}/tgt-train.txt > /tmp/tgt-train.txt
+head ${DATA_DIR}/src-val.txt > /tmp/src-val.txt
+head ${DATA_DIR}/tgt-val.txt > /tmp/tgt-val.txt
+
+rm -rf /tmp/q*pt
+${PYTHON} preprocess.py -train_src /tmp/src-train.txt \
+		     -train_tgt /tmp/tgt-train.txt \
+		     -valid_src /tmp/src-val.txt \
+		     -valid_tgt /tmp/tgt-val.txt \
+		     -save_data /tmp/q >> ${LOG_FILE} 2>&1
+PYTHONPATH=${PROJECT_ROOT}:${PYTHONPATH} ${PYTHON} ./tools/embeddings_to_torch.py \
+        -emb_file_enc ${TEST_DIR}/sample_glove.txt \
+        -emb_file_dec ${TEST_DIR}/sample_glove.txt \
+        -dict_file /tmp/q.vocab.pt \
+        -output_file /tmp/q_gloveembeddings        >> ${LOG_FILE} 2>&1
+[ "$?" -eq 0 ] || error_exit
+echo "Succeeded" | tee -a ${LOG_FILE}
+
+
+echo -n "[+] Doing extract embeddings test..."
+PYTHONPATH=${PROJECT_ROOT}:${PYTHONPATH} ${PYTHON} tools/extract_embeddings.py \
+        -model onmt/tests/test_model.pt  >> ${LOG_FILE} 2>&1
 [ "$?" -eq 0 ] || error_exit
 echo "Succeeded" | tee -a ${LOG_FILE}
 

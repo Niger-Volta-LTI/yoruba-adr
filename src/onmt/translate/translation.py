@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import torch
-from onmt.inputters.text_dataset import TextDataset
+from onmt.inputters.text_dataset import TextMultiField
 
 
 class TranslationBuilder(object):
@@ -14,23 +14,26 @@ class TranslationBuilder(object):
     Problem in Neural Machine Translation" :cite:`Luong2015b`
 
     Args:
-       data (DataSet):
-       fields (dict of Fields): data fields
+       data (onmt.inputters.Dataset): Data.
+       fields (List[Tuple[str, torchtext.data.Field]]): data fields
        n_best (int): number of translations produced
        replace_unk (bool): replace unknown words using attention
        has_tgt (bool): will the batch have gold targets
     """
 
     def __init__(self, data, fields, n_best=1, replace_unk=False,
-                 has_tgt=False):
+                 has_tgt=False, phrase_table=""):
         self.data = data
         self.fields = fields
+        self._has_text_src = isinstance(
+            dict(self.fields)["src"], TextMultiField)
         self.n_best = n_best
         self.replace_unk = replace_unk
+        self.phrase_table = phrase_table
         self.has_tgt = has_tgt
 
     def _build_target_tokens(self, src, src_vocab, src_raw, pred, attn):
-        tgt_field = self.fields["tgt"][0][1].base_field
+        tgt_field = dict(self.fields)["tgt"].base_field
         vocab = tgt_field.vocab
         tokens = []
         for tok in pred:
@@ -46,6 +49,11 @@ class TranslationBuilder(object):
                 if tokens[i] == tgt_field.unk_token:
                     _, max_index = attn[i].max(0)
                     tokens[i] = src_raw[max_index.item()]
+                    if self.phrase_table != "":
+                        with open(self.phrase_table, "r") as f:
+                            for line in f:
+                                if line.startswith(src_raw[max_index.item()]):
+                                    tokens[i] = line.split('|||')[1].strip()
         return tokens
 
     def from_batch(self, translation_batch):
@@ -64,7 +72,7 @@ class TranslationBuilder(object):
 
         # Sorting
         inds, perm = torch.sort(batch.indices)
-        if isinstance(self.data, TextDataset):
+        if self._has_text_src:
             src = batch.src[0][:, :, 0].index_select(1, perm)
         else:
             src = None
@@ -73,7 +81,7 @@ class TranslationBuilder(object):
 
         translations = []
         for b in range(batch_size):
-            if isinstance(self.data, TextDataset):
+            if self._has_text_src:
                 src_vocab = self.data.src_vocabs[inds[b]] \
                     if self.data.src_vocabs else None
                 src_raw = self.data.examples[inds[b]].src[0]
@@ -103,20 +111,21 @@ class TranslationBuilder(object):
 
 
 class Translation(object):
-    """
-    Container for a translated sentence.
+    """Container for a translated sentence.
 
     Attributes:
-        src (`LongTensor`): src word ids
-        src_raw ([str]): raw src words
-
-        pred_sents ([[str]]): words from the n-best translations
-        pred_scores ([[float]]): log-probs of n-best translations
-        attns ([`FloatTensor`]) : attention dist for each translation
-        gold_sent ([str]): words from gold translation
-        gold_score ([float]): log-prob of gold translation
-
+        src (LongTensor): Source word IDs.
+        src_raw (List[str]): Raw source words.
+        pred_sents (List[List[str]]): Words from the n-best translations.
+        pred_scores (List[List[float]]): Log-probs of n-best translations.
+        attns (List[FloatTensor]) : Attention distribution for each
+            translation.
+        gold_sent (List[str]): Words from gold translation.
+        gold_score (List[float]): Log-prob of gold translation.
     """
+
+    __slots__ = ["src", "src_raw", "pred_sents", "attns", "pred_scores",
+                 "gold_sent", "gold_score"]
 
     def __init__(self, src, src_raw, pred_sents,
                  attn, pred_scores, tgt_sent, gold_score):
@@ -133,21 +142,21 @@ class Translation(object):
         Log translation.
         """
 
-        output = '\nSENT {}: {}\n'.format(sent_number, self.src_raw)
+        msg = ['\nSENT {}: {}\n'.format(sent_number, self.src_raw)]
 
         best_pred = self.pred_sents[0]
         best_score = self.pred_scores[0]
         pred_sent = ' '.join(best_pred)
-        output += 'PRED {}: {}\n'.format(sent_number, pred_sent)
-        output += "PRED SCORE: {:.4f}\n".format(best_score)
+        msg.append('PRED {}: {}\n'.format(sent_number, pred_sent))
+        msg.append("PRED SCORE: {:.4f}\n".format(best_score))
 
         if self.gold_sent is not None:
             tgt_sent = ' '.join(self.gold_sent)
-            output += 'GOLD {}: {}\n'.format(sent_number, tgt_sent)
-            output += ("GOLD SCORE: {:.4f}\n".format(self.gold_score))
+            msg.append('GOLD {}: {}\n'.format(sent_number, tgt_sent))
+            msg.append(("GOLD SCORE: {:.4f}\n".format(self.gold_score)))
         if len(self.pred_sents) > 1:
-            output += '\nBEST HYP:\n'
+            msg.append('\nBEST HYP:\n')
             for score, sent in zip(self.pred_scores, self.pred_sents):
-                output += "[{:.4f}] {}\n".format(score, sent)
+                msg.append("[{:.4f}] {}\n".format(score, sent))
 
-        return output
+        return "".join(msg)
