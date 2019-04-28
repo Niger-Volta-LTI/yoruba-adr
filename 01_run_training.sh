@@ -19,7 +19,7 @@ echo "[INFO] running Bahdanau seq2seq training, for GPU training add: -gpuid 0 "
 # python3.6 ./src/train.py -gpuid 0 \
 python3.6 ./src/train.py \
     -data data/demo \
-    -save_model models/yo_adr_bahdanau_lstm_256_1_1 \
+    -save_model models/yo_adr_bahdanau_lstm_128_1_1 \
     -save_checkpoint_steps 500 \
     -tensorboard  \
     -enc_layers 1 \
