@@ -2,8 +2,7 @@
 
 
 ### Motivations
-Nigeria’s dying languages, Warri carry last:
-https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last/
+Nigeria’s dying languages, [Warri carry last](https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last)
 
 ### Applications
 
@@ -18,8 +17,8 @@ https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last/
     * text-language identification (so Twitter can stop claiming Yorùbá text is Vietnamese haba!)
     * part-of-speech taggers
     * named-entity recognition
-    * text-to-speech (TTS) models ([speech synthesis](https://keithito.com/LJ-Speech-Dataset/) )
-    * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/)
+    * text-to-speech (TTS) models ([speech synthesis](https://keithito.com/LJ-Speech-Dataset/))
+    * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/))
 
 ### Quickstart option #1
 Correct diacritics with this [Jupyter notebook](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/correct_yoruba_diacritics.ipynb)
