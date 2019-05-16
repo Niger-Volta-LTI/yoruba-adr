@@ -20,6 +20,11 @@ Nigeria’s dying languages, [Warri carry last](https://www.vanguardngr.com/2017
     * text-to-speech (TTS) models ([speech synthesis](https://keithito.com/LJ-Speech-Dataset/))
     * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/))
 
+### Dependencies
+* Python3 (tested on 3.5, 3.6)
+* Install all dependencies: `pip3 install -r requirements.txt`
+
+
 ### Quickstart option #1
 Correct diacritics with this [Jupyter notebook](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/correct_yoruba_diacritics.ipynb)
 
