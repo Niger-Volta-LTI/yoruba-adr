@@ -21,7 +21,7 @@ Nigeria’s dying languages, [Warri carry last](https://www.vanguardngr.com/2017
     * speech-to-text (STT) models ([speech recogntion](http://www.openslr.org/12/))
 
 ### Dependencies
-* Python3 (tested on 3.5, 3.6)
+* Python3 (tested on 3.5, 3.6, 3.7)
 * Install all dependencies: `pip3 install -r requirements.txt`
 
 
