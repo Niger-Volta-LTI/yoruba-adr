@@ -37,17 +37,19 @@ import re
 
 PARSER = argparse.ArgumentParser(description="Generates yoruba diacritic datasets.")
 PARSER.add_argument("--source_file", type=str, help="path to source diacritics file", required=True)
-PARSER.add_argument("--min_len", type=int, default=5, help="minimum sequence length")
+PARSER.add_argument("--min_len", type=int, default=1, help="minimum sequence length")
 PARSER.add_argument("--max_len", type=int, default=40, help="maximum sequence length")
 PARSER.add_argument("--output_dir", type=str, help="path to the output directory", required=True)
 ARGS = PARSER.parse_args()
 
 forbidden_symbols = re.compile(r"[\[\]\(\)\/\\\>\<\=\+\_\*]")
 numbers = re.compile(r"\d")
-multiple_punct = re.compile(r'([\.\?\!\,\:\;\-])(?:[\.\?\!\,\:\;\-]){1,}')
+multiple_punct = re.compile(r"([\.\?\!\,\:\;\-])(?:[\.\?\!\,\:\;\-]){1,}")
 is_number = lambda x: len(numbers.sub("", x)) / len(x) < 0.6
-NUM = '<NUM>'
+NUM = "<NUM>"
 
+
+# IO HAVOC -- replace with Ìrànlọ́wọ́
 def strip_accents(string):
     """
     Removes diacritics from characters, ascii-fication
@@ -58,13 +60,17 @@ def strip_accents(string):
     Returns:
       ascii-fied string
     """
-    return ''.join(c for c in unicodedata.normalize('NFD', string)
-                   if unicodedata.category(c) != 'Mn')
+    return "".join(
+        c
+        for c in unicodedata.normalize("NFD", string)
+        if unicodedata.category(c) != "Mn"
+    )
+
 
 def skip(line):
 
     # collapse empty lines
-    if line.strip() == '':
+    if line.strip() == "":
         return True
 
     # skip forbidden symbols
@@ -73,8 +79,10 @@ def skip(line):
 
     return False
 
+
 def truncate_string(line, number_of_words):
-    return ' '.join(line.split()[:number_of_words])
+    return " ".join(line.split()[:number_of_words])
+
 
 def make_data(source_file, min_len, max_len):
     """
@@ -94,9 +102,9 @@ def make_data(source_file, min_len, max_len):
     # which means pre-splitting before sending into make data
 
     skipped = 0
-    with codecs.open(source_file, 'r', 'utf-8') as text:
+    with codecs.open(source_file, "r", "utf-8") as text:
         for line in text:
-            line1 = line.replace("\"", "").replace(",", "").strip()
+            line1 = line.replace('"', "").replace(",", "").strip()
 
             # if line1 != line:
             #     print("line1 != line")
@@ -126,7 +134,9 @@ def make_data(source_file, min_len, max_len):
                     output_tokens.append(token.lower())
 
             # yield source_tokens = strip_accents(target_tokens)
-            yield " ".join([strip_accents(token) for token in target_tokens]), " ".join(target_tokens)
+            yield " ".join([strip_accents(token) for token in target_tokens]), " ".join(
+                target_tokens
+            )
 
 
 def write_parallel_text(sources, targets, output_prefix):
@@ -143,12 +153,12 @@ def write_parallel_text(sources, targets, output_prefix):
     source_filename = os.path.abspath(os.path.join(output_prefix, "sources.txt"))
     target_filename = os.path.abspath(os.path.join(output_prefix, "targets.txt"))
 
-    with io.open(source_filename, "w", encoding='utf8') as source_file:
+    with io.open(source_filename, "w", encoding="utf8") as source_file:
         for record in sources:
             source_file.write(record + "\n")
     print("Wrote {}".format(source_filename))
 
-    with io.open(target_filename, "w", encoding='utf8') as target_file:
+    with io.open(target_filename, "w", encoding="utf8") as target_file:
         for record in targets:
             target_file.write(record + "\n")
     print("Wrote {}".format(target_filename))
