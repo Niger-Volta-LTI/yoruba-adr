@@ -99,25 +99,22 @@ echo "" >> ${SOURCE_FILE_TEST}
 SOURCE_BASE_DIR="${BASE_DIR}/../yoruba-text-reserve"
 echo "Changing to use SOURCE_TEXT_BASE_DIR=${SOURCE_BASE_DIR}"
 
-### Check if a directory does not exist ###
-if [ ! -d "${SOURCE_BASE_DIR}" ] 
+### Check if text-reserve exists, which it will for users with permission ###
+if [ -d "${SOURCE_BASE_DIR}" ]
 then
-    echo "Directory ${SOURCE_BASE_DIR} DOES NOT exist" 
-    exit -99
+    ############################################################################################################
+    ### FOR Kọ́lá Túbọ̀sún interiews: 4001 lines => 80/10/10 split => train/dev/test => 3201/400/400
+    echo ""
+    echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
+    head -n 3201 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" >>  ${SOURCE_FILE_TRAIN}
+
+    echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
+    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | head -n 400  >> ${SOURCE_FILE_DEV}
+
+    echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
+    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | tail -n 400  >> ${SOURCE_FILE_TEST}
+    echo "" >> ${SOURCE_FILE_TEST}
 fi
-
-###############################################################################################################
-### FOR Kọ́lá Túbọ̀sún interiews: 4001 lines => 80/10/10 split => train/dev/test => 3201/400/400
-echo "" 
-echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-head -n 3201 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" >>  ${SOURCE_FILE_TRAIN}
-
-echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | head -n 400  >> ${SOURCE_FILE_DEV}
-
-echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | tail -n 400  >> ${SOURCE_FILE_TEST}
-echo "" >> ${SOURCE_FILE_TEST}
 
 
 # Verify split sums are sane: 43330/5415/5417
@@ -132,13 +129,13 @@ echo "[INFO] make parallel text dataset for yoruba diacritics restoration"
 
 # Write train, dev and test data
 ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TRAIN} \
-  --max_len 20 --output_dir ${OUTPUT_DIR_TRAIN}
+  --max_len 40 --output_dir ${OUTPUT_DIR_TRAIN}
 
 ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_DEV} \
-  --max_len 20 --output_dir ${OUTPUT_DIR_DEV}
+  --max_len 40 --output_dir ${OUTPUT_DIR_DEV}
 
 ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TEST} \
-  --max_len 20 --output_dir ${OUTPUT_DIR_TEST}
+  --max_len 40 --output_dir ${OUTPUT_DIR_TEST}
 
 # clean up intermediates, to leave only final parallel text {sources.txt, targets.txt}
 rm ${SOURCE_FILE_TRAIN} ${SOURCE_FILE_DEV} ${SOURCE_FILE_TEST} 
