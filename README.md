@@ -33,7 +33,7 @@ Correct diacritics executing steps in the terminal
 
 1) From the top-level directory, download a prebuilt model to the `./models` directory with `curl`:
 
-    `$ curl -L "https://dl.bintray.com/ruohoruotsi/prebuilt-models/yo_adr_bahdanau_lstm_256_1_1_step_100000.pt" -o yo_adr_bahdanau_lstm_256_1_1_step_100000.pt`
+    `$ curl -L "https://dl.bintray.com/ruohoruotsi/prebuilt-models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt" -o ./models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt`
 2) Run the prediction script, which uses `./data/test/one_phrase.txt` and writes output file `./data/test/pred.txt`. Results are also written to terminal stdout:
 
     `$ ./02_run_prediction.sh`
