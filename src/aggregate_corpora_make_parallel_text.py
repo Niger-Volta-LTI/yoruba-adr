@@ -10,9 +10,9 @@
     ├── Desktop                     /home/iroro/Desktop/
     ├── Downloads                   /home/iroro/Downloads/
     ├── github                      /home/iroro/github/                 <--- where all code lives
-    │   ├── yoruba-text             /home/iroro/github/yoruba-text/
-    │   │   ├── ...
     │   ├── yoruba-adr              /home/iroro/github/yoruba-adr/
+    │   │   ├── ...
+    │   ├── yoruba-text             /home/iroro/github/yoruba-text/
     │   │   ├── ...
     │   ├── yoruba-text-reserve     /home/iroro/github/yoruba-text-reserve
     │   │   └── ...
@@ -34,7 +34,13 @@ print(yoruba_text_reserve_path)
 # Each list item has {path to file, training data offset from 0, dev offset, test offset == EOF}
 yoruba_text_paths = [
     {"path": "LagosNWU/all_transcripts.txt",            "train": 3452, "dev": 431, "test": 432},
-    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308, "dev": 413, "test": 414}
+    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308, "dev": 413, "test": 414},
+    {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
+    {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308, "dev": 413, "test": 414}
+    {"path": "Iroyin/news_sites.txt",                   "train": 1371, "dev": 171, "test": 171}
+
+    # head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
+
 ]
 
 
@@ -50,62 +56,7 @@ yoruba_text_paths = [
 # SOURCE_FILE_TRAIN="${OUTPUT_DIR_TRAIN}/train.txt"
 # SOURCE_FILE_DEV="${OUTPUT_DIR_DEV}/dev.txt"
 # SOURCE_FILE_TEST="${OUTPUT_DIR_TEST}/test.txt"
-#
-# ###############################################################################################################
-# ### FOR LagosNWUspeech_corpus: 4315 lines => 80/10/10 split => train/dev/test => 3452/431/432
-# echo ""
-# echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-# head -n 3452 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" >>  ${SOURCE_FILE_TRAIN}
-#
-# echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-# tail -n 863 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" | head -n 431  >> ${SOURCE_FILE_DEV}
-#
-# echo "Using [LagosNWUspeech] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-# tail -n 863 "${SOURCE_BASE_DIR}/LagosNWU/all_transcripts.txt" | tail -n 432  >> ${SOURCE_FILE_TEST}
-# echo "" >> ${SOURCE_FILE_TEST}
-#
-#
-# ###############################################################################################################
-# ### FOR TheYorubaBlog_corpus: 4135 lines => 80/10/10 split => train/dev/test => 3308/413/414
-# echo ""
-# echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-# head -n 3308 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" >>  ${SOURCE_FILE_TRAIN}
-#
-# echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-# tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" | head -n 413  >> ${SOURCE_FILE_DEV}
-#
-# echo "Using [TheYorubaBlog] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-# tail -n 827 "${SOURCE_BASE_DIR}/TheYorubaBlog/theyorubablog_dot_com.txt" | tail -n 414  >> ${SOURCE_FILE_TEST}
-# echo "" >> ${SOURCE_FILE_TEST}
-#
-#
-# ###############################################################################################################
-# ### FOR BibeliYoruba_corpus: 45713 lines => 80/10/10 split => train/dev/test => 36570/4570/4570
-# echo ""
-# echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-# head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
-#
-# echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-# tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | head -n 4571  >> ${SOURCE_FILE_DEV}
-#
-# echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-# tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
-# echo "" >> ${SOURCE_FILE_TEST}
-#
-#
-# ###############################################################################################################
-# ### FOR Iroyin (news): 1738 lines => 80/10/10 split => train/dev/test => 1371/171/171
-# echo ""
-# echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-# head -n 1371 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" >>  ${SOURCE_FILE_TRAIN}
-#
-# echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-# tail -n 342 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" | head -n 171  >> ${SOURCE_FILE_DEV}
-#
-# echo "Using [Iroyin] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-# tail -n 342 "${SOURCE_BASE_DIR}/Iroyin/news_sites.txt" | tail -n 171  >> ${SOURCE_FILE_TEST}
-# echo "" >> ${SOURCE_FILE_TEST}
-#
+
 #
 # ############################################################################################################
 # ### FOR https://github.com/Toluwase/Word-Level-Language-Identification-for-Resource-Scarce-
