@@ -4,7 +4,7 @@
     Combine various files in yoruba-text, text-reserve into {train, validation, text} source & target pairs
 
     We expect that yoruba-text, yoruba-adr & yoruba-text-reserve (for those who have access) are SIBLING
-    directories, within a parent directory like github, for example: /home/iroro/github
+    directories, within a parent directory. For example: /home/iroro/github
 
     ${HOME}                         /home/iroro/
     ├── Desktop                     /home/iroro/Desktop/
@@ -33,11 +33,11 @@ print(yoruba_text_reserve_path)
 
 # Each list item has {path to file, training data offset from 0, dev offset, test offset == EOF}
 yoruba_text_paths = [
-    {"path": "LagosNWU/all_transcripts.txt",            "train": 3452, "dev": 431, "test": 432},
-    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308, "dev": 413, "test": 414},
+    {"path": "LagosNWU/all_transcripts.txt",            "train": 3452,  "dev": 431,  "test": 432},
+    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308,  "dev": 413,  "test": 414},
     {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
-    {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308, "dev": 413, "test": 414}
-    {"path": "Iroyin/news_sites.txt",                   "train": 1371, "dev": 171, "test": 171}
+    {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308,  "dev": 413,  "test": 414},
+    {"path": "Iroyin/news_sites.txt",                   "train": 1371,  "dev": 171,  "test": 171}
 
     # head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
 

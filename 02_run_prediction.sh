@@ -6,7 +6,8 @@ echo "[INFO] running inference on test sources"
 # put the path to your model checkpoint or final model
 python3 ./src/translate.py \
 	-model models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt \
-	-src data/test/one_phrase.txt \
+	-src data/test/sources.txt \
+	-tgt data/test/targets.txt \
 	-output data/test/pred.txt \
 	-replace_unk \
 	-verbose
