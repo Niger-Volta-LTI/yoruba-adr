@@ -320,6 +320,9 @@ class Translator(object):
         pred_score_total, pred_words_total = 0, 0
         gold_score_total, gold_words_total = 0, 0
 
+        # compute accuracy like we do during training across the entire test set (or single word)
+        total_correct_words, total_num_words = 0, 0
+
         all_scores = []
         all_predictions = []
 
@@ -339,11 +342,30 @@ class Translator(object):
                     gold_score_total += trans.gold_score
                     gold_words_total += len(trans.gold_sent) + 1
 
+                    # IOHAVOC
+                    total_num_words += len(trans.gold_sent)
+
+                    assert(len(trans.pred_sents) == 1)
+                    n_best_preds = trans.pred_sents[0]
+
+                    if len(trans.gold_sent) != len(n_best_preds): # make sure we predicted the same num words
+                        self._log("ERROR why??? ")
+                        continue
+
+                    for i in range(len(trans.gold_sent)):
+                        if trans.gold_sent[i] == n_best_preds[i]:
+                            total_correct_words += 1
+
+
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
                 all_predictions += [n_best_preds]
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
+
+                self._log("total_num_words => " + str(total_num_words))
+                self._log("total_correct_words => " + str(total_correct_words))
+                self._log("Accuracy =>> " + str(100 * (total_correct_words / total_num_words)))
 
                 if self.verbose:
                     sent_number = next(counter)
@@ -384,8 +406,7 @@ class Translator(object):
                                      pred_words_total)
             self._log(msg)
             if tgt is not None:
-                msg = self._report_score('GOLD', gold_score_total,
-                                         gold_words_total)
+                msg = self._report_score('GOLD', gold_score_total, gold_words_total)
                 self._log(msg)
                 if self.report_bleu:
                     msg = self._report_bleu(tgt)
