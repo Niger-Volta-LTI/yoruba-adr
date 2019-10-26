@@ -342,7 +342,7 @@ class Translator(object):
                     gold_score_total += trans.gold_score
                     gold_words_total += len(trans.gold_sent) + 1
 
-                    # IOHAVOC
+                    # IOHAVOC - compute accuracy
                     total_num_words += len(trans.gold_sent)
 
                     assert(len(trans.pred_sents) == 1)
@@ -350,12 +350,15 @@ class Translator(object):
 
                     if len(trans.gold_sent) != len(n_best_preds): # make sure we predicted the same num words
                         self._log("ERROR why??? ")
+                        if "<unk>" in trans.gold_sent:
+                            self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
+                        elif len(trans.gold_sent) > 0 and len(n_best_preds) > 0:
+                            self._log("UNEVEN LENGTHS")
                         continue
 
                     for i in range(len(trans.gold_sent)):
                         if trans.gold_sent[i] == n_best_preds[i]:
                             total_correct_words += 1
-
 
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
@@ -363,9 +366,11 @@ class Translator(object):
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
-                self._log("total_num_words => " + str(total_num_words))
-                self._log("total_correct_words => " + str(total_correct_words))
-                self._log("Accuracy =>> " + str(100 * (total_correct_words / total_num_words)))
+                self._log("-----------------------------------")
+                self._log("total_num_words: " + str(total_num_words))
+                self._log("total_correct_words: " + str(total_correct_words))
+                self._log("Accuracy (%): " + str(100 * (total_correct_words / total_num_words)))
+                self._log("-----------------------------------")
 
                 if self.verbose:
                     sent_number = next(counter)
