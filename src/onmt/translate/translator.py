@@ -356,9 +356,17 @@ class Translator(object):
                             self._log("UNEVEN LENGTHS")
                         continue
 
+                    current_trans_correct = 0
                     for i in range(len(trans.gold_sent)):
                         if trans.gold_sent[i] == n_best_preds[i]:
                             total_correct_words += 1
+                            current_trans_correct += 1
+
+                    self._log("")
+                    self._log("")
+                    self._log("-----------------------------------")
+                    self._log("num_correct_words: " + str(current_trans_correct))
+                    self._log("num_words: " + str(len(trans.gold_sent)))
 
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
@@ -367,10 +375,11 @@ class Translator(object):
                 self.out_file.flush()
 
                 self._log("-----------------------------------")
-                self._log("total_num_words: " + str(total_num_words))
-                self._log("total_correct_words: " + str(total_correct_words))
+                self._log("Running total correct_words: " + str(total_correct_words))
+                self._log("Running total num_words: " + str(total_num_words))
                 self._log("Accuracy (%): " + str(100 * (total_correct_words / total_num_words)))
                 self._log("-----------------------------------")
+
 
                 if self.verbose:
                     sent_number = next(counter)
