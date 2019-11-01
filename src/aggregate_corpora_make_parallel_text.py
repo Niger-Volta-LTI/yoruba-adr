@@ -32,6 +32,11 @@ print(yoruba_text_reserve_path)
 
 
 # Each list item has {path to file, training data offset from 0, dev offset, test offset == EOF}
+
+### LagosNWUspeech_corpus: 4315 lines => 80/10/10 split => train/dev/test => 3452/431/432
+### TheYorubaBlog_corpus:  4135 lines => 80/10/10 split => train/dev/test => 3308/413/414
+
+
 yoruba_text_paths = [
     {"path": "LagosNWU/all_transcripts.txt",            "train": 3452,  "dev": 431,  "test": 432},
     {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308,  "dev": 413,  "test": 414},
@@ -52,13 +57,18 @@ for item in yoruba_text_paths:
     with open(item_full_path, 'r') as f:
         x = f.read().splitlines()
 
-    # assert item['train'] + item['dev'] + item['test'] == len(x)
-    print(item['train'] + item['dev'] + item['test'])
-    print(len(x))
+    assert item['train'] + item['dev'] + item['test'] == len(x) - 1  # because len() is not zero based indexing
 
     # copy item['train'] items to train_text
+    print(len(x[:item['train']]))
+    training_text += x[:item['train']]
+    print(len(training_text))
+
     # copy item['dev'] items to dev_text
+    dev_text += x[item['train']:item['train'] + item['dev']]
+
     # copy item['test' items to test_text
+    test_text += x[item['train'] + item['dev']:item['train'] + item['dev'] + item['test']]
 
 
 
