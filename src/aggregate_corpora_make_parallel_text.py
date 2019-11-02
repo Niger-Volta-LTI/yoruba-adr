@@ -35,11 +35,15 @@ print(yoruba_text_reserve_path)
 
 ### LagosNWUspeech_corpus: 4315 lines => 80/10/10 split => train/dev/test => 3452/431/432
 ### TheYorubaBlog_corpus:  4135 lines => 80/10/10 split => train/dev/test => 3308/413/414
+### Asubiaro_LangID/langid_combined_training_test_corpus.txt
+#                         5325 lines => 80/10/10 => train/dev/test => 4259/533/533
 
 
 yoruba_text_paths = [
     {"path": "LagosNWU/all_transcripts.txt",            "train": 3452,  "dev": 431,  "test": 432},
     {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308,  "dev": 413,  "test": 414},
+    {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4259,  "dev": 533,  "test": 533}
+
     # {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
     # {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308,  "dev": 413,  "test": 414}
     # {"path": "Iroyin/news_sites.txt",                   "train": 1371,  "dev": 171,  "test": 171}
@@ -73,6 +77,29 @@ for item in yoruba_text_paths:
 
 
 # for path in yoruba_text_reserve_paths:
+
+# write files to disk
+
+trainin
+with open(filepath, 'w') as file_handler:
+    for item in the_list:
+        file_handler.write("{}\n".format(item))
+
+
+
+###############################################################################################################
+# [INFO] make parallel text dataset for yoruba diacritics restoration"
+
+# Write train, dev and test data
+${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TRAIN} --max_len 40 --output_dir ${OUTPUT_DIR_TRAIN}
+
+${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_DEV} --max_len 40 --output_dir ${OUTPUT_DIR_DEV}
+
+${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TEST} --max_len 40 --output_dir ${OUTPUT_DIR_TEST}
+
+# clean up intermediates, to leave only final parallel text {sources.txt, targets.txt}
+rm ${SOURCE_FILE_TRAIN} ${SOURCE_FILE_DEV} ${SOURCE_FILE_TEST}
+
 
 
 
