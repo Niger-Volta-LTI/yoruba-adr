@@ -19,7 +19,7 @@
 
 """
 import os.path as path
-
+import make_parallel_text
 
 base_dir_path = path.dirname(path.dirname(path.realpath(__file__)))                         # yoruba-adr
 print("[INFO] base_dir_path: {}".format(base_dir_path))
@@ -46,8 +46,8 @@ aggregated_test_text_path  = base_dir_path + "/data/test/combined_test.txt"
 
 
 yoruba_text_paths = [
-    {"path": "LagosNWU/all_transcripts.txt",            "train": 3452,  "dev": 431,  "test": 432},
-    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt", "train": 3308,  "dev": 413,  "test": 414},
+    {"path": "LagosNWU/all_transcripts.txt",                             "train": 3452,  "dev": 431,  "test": 432},
+    {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3308,  "dev": 413,  "test": 414},
     {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4258,  "dev": 533,  "test": 533}
 
     # {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
@@ -97,17 +97,19 @@ with open(aggregated_test_text_path, 'w') as file_handler:
     for test_line in test_text:
         file_handler.write("{}\n".format(test_line))
 
+print("[INFO] make parallel text dataset for yoruba diacritics restoration")
 
-###############################################################################################################
-# # [INFO] make parallel text dataset for yoruba diacritics restoration"
-#
-# # Write train, dev and test data
-# ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TRAIN} --max_len 40 --output_dir ${OUTPUT_DIR_TRAIN}
-#
+# Write train, dev and test data
+# make_parallel_text.main(['a', 'b', 'c'])
+# --source_file ${SOURCE_FILE_TRAIN} --max_len 40 --output_dir ${OUTPUT_DIR_TRAIN}
+
+
 # ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_DEV} --max_len 40 --output_dir ${OUTPUT_DIR_DEV}
-#
+
 # ${BASE_DIR}/src/make_parallel_text.py --source_file ${SOURCE_FILE_TEST} --max_len 40 --output_dir ${OUTPUT_DIR_TEST}
-#
+
+
+
 # # clean up intermediates, to leave only final parallel text {sources.txt, targets.txt}
 # rm ${SOURCE_FILE_TRAIN} ${SOURCE_FILE_DEV} ${SOURCE_FILE_TEST}
 #
