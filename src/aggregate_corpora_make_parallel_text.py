@@ -40,17 +40,17 @@ def main():
 
     # Each list item has {path to file, training data offset from 0, dev offset, test offset == EOF}
     yoruba_text_corpora = [
-        {"path": "LagosNWU/all_transcripts.txt",                             "train": 3452,  "dev": 431,  "test": 432},
-        {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3308,  "dev": 413,  "test": 414},
-        {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4258,  "dev": 533,  "test": 533}
+        {"path": "LagosNWU/all_transcripts.txt",                             "train": 3883,  "dev": 432},
+        {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3721,  "dev": 414},
+        {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533}
+        # {"path": "Iroyin/yoglobalvoices.txt",                             "train": 1371,  "dev": 171}
 
         # {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
         # {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308,  "dev": 413,  "test": 414}
-        # {"path": "Iroyin/news_sites.txt",                   "train": 1371,  "dev": 171,  "test": 171}
     ]
 
     yoruba_reserve_text_corpora = [
-        {"path": "Kola_Tubosun_Interviews/kola_corpus.txt",  "train": 3200,  "dev": 400,  "test": 400}
+        {"path": "Kola_Tubosun_Interviews/kola_corpus.txt",  "train": 3600,  "dev": 400}
     ]
 
     # training, validation & test texts
@@ -64,12 +64,11 @@ def main():
         with open(item_full_path, 'r') as f:
             x = f.read().splitlines()
 
-        assert item['train'] + item['dev'] + item['test'] == len(x) - 1  # because len() is not zero based indexing
+        assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
 
         # copy texts
         training_text += x[:item['train']]
         dev_text += x[item['train']:item['train'] + item['dev']]
-        test_text += x[item['train'] + item['dev']:item['train'] + item['dev'] + item['test']]
 
     # Assemble private yoruba-text-reserve (used with permission, but not public domain, or open-source)
     for item in yoruba_reserve_text_corpora:
@@ -77,14 +76,12 @@ def main():
         with open(item_full_path, 'r') as f:
             x = f.read().splitlines()
 
-        assert item['train'] + item['dev'] + item['test'] == len(x) - 1  # because len() is not zero based indexing
+        assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
 
         training_text += x[:item['train']]
         dev_text += x[item['train']:item['train'] + item['dev']]
-        test_text += x[item['train'] + item['dev']:item['train'] + item['dev'] + item['test']]
 
-
-    # write files to disk
+    # Write files to disk
     with open(aggregated_train_text_path, 'w') as file_handler:
         for training_line in training_text:
             file_handler.write("{}\n".format(training_line))
@@ -92,10 +89,6 @@ def main():
     with open(aggregated_dev_text_path, 'w') as file_handler:
         for dev_line in dev_text:
             file_handler.write("{}\n".format(dev_line))
-
-    with open(aggregated_test_text_path, 'w') as file_handler:
-        for test_line in test_text:
-            file_handler.write("{}\n".format(test_line))
 
     print("[INFO] make parallel text dataset for yoruba diacritics restoration")
 
