@@ -42,8 +42,8 @@ def main():
     yoruba_text_corpora = [
         {"path": "LagosNWU/all_transcripts.txt",                             "train": 3883,  "dev": 432},
         {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3721,  "dev": 414},
-        {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533}
-        # {"path": "Iroyin/yoglobalvoices.txt",                             "train": 1371,  "dev": 171}
+        {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533},
+        {"path": "Iroyin/yoglobalvoices.txt",                                "train": 557,  "dev": 61}
 
         # {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
         # {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308,  "dev": 413,  "test": 414}
