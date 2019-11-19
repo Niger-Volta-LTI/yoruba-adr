@@ -36,21 +36,30 @@ def main():
     # aggregated & split text paths
     aggregated_train_text_path = base_dir_path + "/data/train/combined_train.txt"
     aggregated_dev_text_path   = base_dir_path + "/data/dev/combined_dev.txt"
-    aggregated_test_text_path  = base_dir_path + "/data/test/combined_test.txt"
 
-    # Each list item has {path to file, training data offset from 0, dev offset, test offset == EOF}
+    # Each list item has {path to file, training data offset from 0, dev offset == EOF}
     yoruba_text_corpora = [
         {"path": "LagosNWU/all_transcripts.txt",                             "train": 3883,  "dev": 432},
         {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3721,  "dev": 414},
         {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533},
-        {"path": "Iroyin/yoglobalvoices.txt",                                "train": 557,  "dev": 61}
+        {"path": "Iroyin/yoglobalvoices.txt",                                "train": 557,   "dev": 61},
 
-        # {"path": "Bibeli_Mimo/biblica.txt",                 "train": 36570, "dev": 4570, "test": 4570},
-        # {"path": "Bibeli_Mimo/bsn.txt",                     "train": 3308,  "dev": 413,  "test": 414}
+        # incomplete
+        {"path": "Bibeli_Mimo/biblica.txt",                                  "train": 36570, "dev": 4570},
+        {"path": "Bibeli_Mimo/bsn.txt",                                      "train": 3308,  "dev": 413},
+        {"path": "Lẹ́síkà/yoruba_words_sorted.txt", "train": 3308, "dev": 413},
+        {"path": "Owe/owe.txt", "train": 3308, "dev": 413},
+        {"path": "JW300/jw300.yo.txt", "train": 3308, "dev": 413},
+        {"path": "Universal_Declaration_Human_Rights/unhr.yo.txt", "train": 3308, "dev": 413}
+
     ]
 
     yoruba_reserve_text_corpora = [
-        {"path": "Kola_Tubosun_Interviews/kola_corpus.txt",  "train": 3600,  "dev": 400}
+        {"path": "Kola_Tubosun/Interviews/kola_corpus.txt",  "train": 3600,  "dev": 400},
+
+        # incomplete
+        {"path": "Kola_Tubosun/201906_corpus/Kola_201906.txt", "train": 3600, "dev": 400},
+        {"path": "Timi_Wuraola/HÁÀ_ÈNÌYÀN_edited_wuraola.txt", "train": 3600, "dev": 400}
     ]
 
     # training, validation & test texts
