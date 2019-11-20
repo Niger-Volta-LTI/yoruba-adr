@@ -37,21 +37,23 @@ def main():
     aggregated_train_text_path = base_dir_path + "/data/train/combined_train.txt"
     aggregated_dev_text_path   = base_dir_path + "/data/dev/combined_dev.txt"
 
-    # Each list item has {path to file, training data offset from 0, dev offset == EOF}
+    # Each list item has {path to file, training data offset from 0, dev offset ==> EOF}
     yoruba_text_corpora = [
         {"path": "LagosNWU/all_transcripts.txt",                             "train": 3883,  "dev": 432},
         {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3721,  "dev": 414},
         {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533},
         {"path": "Iroyin/yoglobalvoices.txt",                                "train": 557,   "dev": 61},
+        {"path": "Bibeli_Mimo/biblica.txt",                                  "train": 27739, "dev": 3083},
+        {"path": "Bibeli_Mimo/bsn.txt",                                      "train": 29034, "dev": 3226},
 
         # incomplete
-        {"path": "Bibeli_Mimo/biblica.txt",                                  "train": 36570, "dev": 4570},
-        {"path": "Bibeli_Mimo/bsn.txt",                                      "train": 3308,  "dev": 413},
-        {"path": "Lẹ́síkà/yoruba_words_sorted.txt", "train": 3308, "dev": 413},
-        {"path": "Owe/owe.txt", "train": 3308, "dev": 413},
-        {"path": "JW300/jw300.yo.txt", "train": 3308, "dev": 413},
-        {"path": "Universal_Declaration_Human_Rights/unhr.yo.txt", "train": 3308, "dev": 413}
+        {"path": "Owe/owe.txt",                                              "train": 2430, "dev": 271},
+        {"path": "JW300/jw300.yo.txt",                                       "train": 470238, "dev": 4749},
+        {"path": "Universal_Declaration_Human_Rights/unhr.yo.txt",           "train": 135, "dev": 15},
+    ]
 
+    yoruba_lesika = [
+        {"path": "Lesika/yoruba_words_sorted.txt",                           "train": 41584},
     ]
 
     yoruba_reserve_text_corpora = [
