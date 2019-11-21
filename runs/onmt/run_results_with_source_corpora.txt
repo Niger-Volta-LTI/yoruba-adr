@@ -1002,3 +1002,180 @@ Iroyin should be the designated test set (removed from current "prod") for prope
 [2019-11-07 19:00:38,425 INFO] Step 42050/100000; acc:  95.59; ppl:  1.15; xent: 0.14; lr: 0.00100; 279/297 tok/s; 153417 sec
 [2019-11-07 19:03:44,384 INFO] Step 42100/100000; acc:  95.80; ppl:  1.15; xent: 0.14; lr: 0.00100; 292/309 tok/s; 153603 sec
 [2019-11-07 19:06:59,703 INFO] Step 42150/100000; acc:  95.83; ppl:  1.15; xent: 0.14; lr: 0.00100; 297/313 tok/s; 153798 sec
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+test on iroyin
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+iroro:~/github/yoruba-adr$ ./03_run_eval.sh
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_21000_no_kola_mistake.pt file...
+[2019-11-20 22:53:13,051 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+-----------------------------------
+Running total correct_words: 14768
+Running total num_words: 30631
+Accuracy (%): 48.21259508341223
+-----------------------------------
+PRED AVG SCORE: -0.3469, PRED PPL: 1.4147
+GOLD AVG SCORE: -23.6837, GOLD PPL: 19305884176.2858
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_22500_keeper.pt file...
+[2019-11-20 22:57:22,520 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+-----------------------------------
+Running total correct_words: 14375
+Running total num_words: 30631
+Accuracy (%): 46.929581143286214
+-----------------------------------
+PRED AVG SCORE: -0.3153, PRED PPL: 1.3706
+GOLD AVG SCORE: -23.1825, GOLD PPL: 11696217744.7944
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt file...
+[2019-11-20 23:01:48,316 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+-----------------------------------
+Running total correct_words: 27075
+Running total num_words: 30631
+Accuracy (%): 88.39084587509386
+-----------------------------------
+PRED AVG SCORE: -0.0518, PRED PPL: 1.0532
+GOLD AVG SCORE: -24.4388, GOLD PPL: 41079461316.5603
+
+----------------------------------------------------------------------
+NEW BIBLICA.txt (aggregate_corpora.py)
+iroro:~/github/yoruba-adr$ cat data/train/targets.txt | wc
+   43409 1025567 5791872
+iroro:~/github/yoruba-adr$ cat data/dev/targets.txt | wc
+    5984  130220  738740
+iroro:~/github/yoruba-adr$ cat data/test/targets.txt | wc
+    6158  123030  691827
+
+----------------------------------------------------------------------
+OLD BIBLICA_TEXT (aggegrate_copora_.sh)
+
+iroro:~/github/yoruba-adr$ cat data/train/targets.txt | wc
+   50074  908533 5335463
+iroro:~/github/yoruba-adr$ cat data/dev/targets.txt | wc
+    6197  105272  628935
+iroro:~/github/yoruba-adr$ cat data/test/targets.txt | wc
+    6175   97643  558038
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+test on test split of training set data (bibeli, etc)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+iroro:~/github/yoruba-adr$ ./03_run_eval.sh
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_21000_no_kola_mistake.pt file...
+[2019-11-21 09:27:35,728 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+UNEVEN LENGTHS
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+-----------------------------------
+Running total correct_words: 72754
+Running total num_words: 89116
+Accuracy (%): 81.63966066699582
+-----------------------------------
+PRED AVG SCORE: -0.1887, PRED PPL: 1.2076
+GOLD AVG SCORE: -23.6168, GOLD PPL: 18056364592.9945
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_22500_keeper.pt file...
+[2019-11-21 09:39:15,639 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+UNEVEN LENGTHS
+-----------------------------------
+Running total correct_words: 74165
+Running total num_words: 89116
+Accuracy (%): 83.22299025988599
+-----------------------------------
+PRED AVG SCORE: -0.1538, PRED PPL: 1.1662
+GOLD AVG SCORE: -23.5881, GOLD PPL: 17545481448.3422
+Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt file...
+[2019-11-21 09:52:08,659 INFO] Translating shard 0.
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+UNEVEN LENGTHS
+ERROR why???
+UNEVEN LENGTHS
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+ERROR why???
+<UNK> in PHRASE, test set vocab mismatch is messing up predictions
+-----------------------------------
+Running total correct_words: 71927
+Running total num_words: 89116
+Accuracy (%): 80.71165671708785
+-----------------------------------
+PRED AVG SCORE: -0.0924, PRED PPL: 1.0968
+GOLD AVG SCORE: -27.3489, GOLD PPL: 754156323478.1298
