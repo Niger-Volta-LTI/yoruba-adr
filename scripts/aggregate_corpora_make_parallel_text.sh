@@ -72,13 +72,13 @@ echo "" >> ${SOURCE_FILE_TEST}
 ### FOR BibeliYoruba_corpus: 45713 lines => 80/10/10 split => train/dev/test => 36570/4570/4570
 echo "" 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" >>  ${SOURCE_FILE_TRAIN}
+head -n 36570 "${SOURCE_BASE_DIR}/Bibeli_Mimo/biblica.txt" >>  ${SOURCE_FILE_TRAIN}
 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | head -n 4571  >> ${SOURCE_FILE_DEV}
+tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/biblica.txt" | head -n 4571  >> ${SOURCE_FILE_DEV}
 
 echo "Using [BibeliYoruba] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/bibeli_ede_yoruba.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
+tail -n 9143 "${SOURCE_BASE_DIR}/Bibeli_Mimo/biblica.txt" | tail -n 4571  >> ${SOURCE_FILE_TEST}
 echo "" >> ${SOURCE_FILE_TEST}
 
 
@@ -134,13 +134,13 @@ echo "Changing to use SOURCE_TEXT_BASE_DIR=${SOURCE_BASE_DIR}"
 if [ -d "${SOURCE_BASE_DIR}" ]
 then
     echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TRAIN}"
-    head -n 3201 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" >>  ${SOURCE_FILE_TRAIN}
+    head -n 3201 "${SOURCE_BASE_DIR}/Kola_Tubosun/Interviews/kola_corpus.txt" >>  ${SOURCE_FILE_TRAIN}
 
     echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_DEV}"
-    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | head -n 400  >> ${SOURCE_FILE_DEV}
+    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun/Interviews/kola_corpus.txt" | head -n 400  >> ${SOURCE_FILE_DEV}
 
     echo "Using [Kọ́lá Túbọ̀sún interviews] SOURCE FILE TRAIN=${SOURCE_FILE_TEST}"
-    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun_Interviews/kola_corpus.txt" | tail -n 400  >> ${SOURCE_FILE_TEST}
+    tail -n 800 "${SOURCE_BASE_DIR}/Kola_Tubosun/Interviews/kola_corpus.txt" | tail -n 400  >> ${SOURCE_FILE_TEST}
     echo "" >> ${SOURCE_FILE_TEST}
 fi
 
