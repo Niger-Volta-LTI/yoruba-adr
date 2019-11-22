@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 echo "[INFO] aggregate sources from yoruba-text, split & strip to make parallel text"
-./scripts/aggregate_corpora_make_parallel_text.sh
-
+python3 ./src/aggregate_corpora_make_parallel_text.py
 
 echo "[INFO] remove old tensorboard runs, and preprocessed files"
 rm data/*.pt
@@ -19,7 +18,7 @@ echo "[INFO] running Bahdanau seq2seq training, for GPU training add: -gpuid 0 "
 # python3 ./src/train.py -gpuid 0 \
 python3 ./src/train.py \
     -data data/demo \
-    -save_model models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin \
+    -save_model models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_all_in_take1 \
     -save_checkpoint_steps 500 \
     -tensorboard  \
     -enc_layers 2 \
