@@ -5,7 +5,9 @@ python3 ./src/aggregate_corpora_make_parallel_text.py
 
 echo "[INFO] remove old tensorboard runs, and preprocessed files"
 rm data/*.pt
-rm -rf runs/*
+
+# don't delete previous runs
+# rm -rf runs/*
 
 echo "[INFO] preprocess training data"
 python3 ./src/preprocess.py -train_src ./data/train/sources.txt \

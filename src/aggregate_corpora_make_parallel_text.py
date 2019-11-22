@@ -45,6 +45,14 @@ def main():
     aggregated_dev_text_path   = base_dir_path + "/data/dev/combined_dev.txt"
     test_text_path             = base_dir_path + "/data/test/news_sites.targets.txt"
 
+    try:
+
+        os.makedirs(path.split(path.abspath(aggregated_train_text_path))[0])
+        os.makedirs(path.split(path.abspath(aggregated_dev_text_path))[0])
+        os.makedirs(path.split(path.abspath(test_text_path))[0])
+    except OSError:
+        print("[ERROR] could not make paths for combined text")
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -89,6 +97,7 @@ def main():
         with open(item_full_path, 'r') as f:
             x = f.read().splitlines()
 
+        print(item['path'], str(len(x) - 1))
         assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
 
         # copy texts
