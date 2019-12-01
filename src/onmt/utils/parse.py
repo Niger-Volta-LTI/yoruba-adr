@@ -46,9 +46,14 @@ class ArgumentParser(cfargparse.ArgumentParser):
         if model_opt.copy_attn_type is None:
             model_opt.copy_attn_type = model_opt.global_attention
 
+        if model_opt.alignment_layer is None:
+            model_opt.alignment_layer = -2
+            model_opt.lambda_align = 0.0
+            model_opt.full_context_alignment = False
+
     @classmethod
     def validate_model_opts(cls, model_opt):
-        assert model_opt.model_type in ["text", "img", "audio"], \
+        assert model_opt.model_type in ["text", "img", "audio", "vec"], \
             "Unsupported model type %s" % model_opt.model_type
 
         # this check is here because audio allows the encoder and decoder to
@@ -63,10 +68,17 @@ class ArgumentParser(cfargparse.ArgumentParser):
             if model_opt.model_type != "text":
                 raise AssertionError(
                     "--share_embeddings requires --model_type text.")
-        if model_opt.model_dtype == "fp16":
-            logger.warning(
-                "FP16 is experimental, the generated checkpoints may "
-                "be incompatible with a future version")
+        if model_opt.lambda_align > 0.0:
+            assert model_opt.decoder_type == 'transformer', \
+                "Only transformer is supported to joint learn alignment."
+            assert model_opt.alignment_layer < model_opt.dec_layers and \
+                model_opt.alignment_layer >= -model_opt.dec_layers, \
+                "N° alignment_layer should be smaller than number of layers."
+            logger.info("Joint learn alignment at layer [{}] "
+                        "with {} heads in full_context '{}'.".format(
+                            model_opt.alignment_layer,
+                            model_opt.alignment_heads,
+                            model_opt.full_context_alignment))
 
     @classmethod
     def ckpt_model_opts(cls, ckpt_opt):
@@ -81,15 +93,32 @@ class ArgumentParser(cfargparse.ArgumentParser):
     def validate_train_opts(cls, opt):
         if opt.epochs:
             raise AssertionError(
-                "-epochs is deprecated please use -train_steps.")
+                  "-epochs is deprecated please use -train_steps.")
         if opt.truncated_decoder > 0 and max(opt.accum_count) > 1:
             raise AssertionError("BPTT is not compatible with -accum > 1")
+
         if opt.gpuid:
-            raise AssertionError("gpuid is deprecated \
-                  see world_size and gpu_ranks")
+            raise AssertionError(
+                  "gpuid is deprecated see world_size and gpu_ranks")
         if torch.cuda.is_available() and not opt.gpu_ranks:
-            logger.info("WARNING: You have a CUDA device, \
-                        should run with -gpu_ranks")
+            logger.warn("You have a CUDA device, should run with -gpu_ranks")
+        if opt.world_size < len(opt.gpu_ranks):
+            raise AssertionError(
+                  "parameter counts of -gpu_ranks must be less or equal "
+                  "than -world_size.")
+        if opt.world_size == len(opt.gpu_ranks) and \
+                min(opt.gpu_ranks) > 0:
+            raise AssertionError(
+                  "-gpu_ranks should have master(=0) rank "
+                  "unless -world_size is greater than len(gpu_ranks).")
+        assert len(opt.data_ids) == len(opt.data_weights), \
+            "Please check -data_ids and -data_weights options!"
+
+        assert len(opt.dropout) == len(opt.dropout_steps), \
+            "Number of dropout values must match accum_steps values"
+
+        assert len(opt.attention_dropout) == len(opt.dropout_steps), \
+            "Number of attention_dropout values must match accum_steps values"
 
     @classmethod
     def validate_translate_opts(cls, opt):
@@ -105,9 +134,26 @@ class ArgumentParser(cfargparse.ArgumentParser):
             "-shuffle is not implemented. Please shuffle \
             your data before pre-processing."
 
-        assert os.path.isfile(opt.train_src) \
-            and os.path.isfile(opt.train_tgt), \
-            "Please check path of your train src and tgt files!"
+        assert len(opt.train_src) == len(opt.train_tgt), \
+            "Please provide same number of src and tgt train files!"
+
+        assert len(opt.train_src) == len(opt.train_ids), \
+            "Please provide proper -train_ids for your data!"
+
+        for file in opt.train_src + opt.train_tgt:
+            assert os.path.isfile(file), "Please check path of %s" % file
+
+        if len(opt.train_align) == 1 and opt.train_align[0] is None:
+            opt.train_align = [None] * len(opt.train_src)
+        else:
+            assert len(opt.train_align) == len(opt.train_src), \
+                "Please provide same number of word alignment train \
+                files as src/tgt!"
+            for file in opt.train_align:
+                assert os.path.isfile(file), "Please check path of %s" % file
+
+        assert not opt.valid_align or os.path.isfile(opt.valid_align), \
+            "Please check path of your valid alignment file!"
 
         assert not opt.valid_src or os.path.isfile(opt.valid_src), \
             "Please check path of your valid src file!"

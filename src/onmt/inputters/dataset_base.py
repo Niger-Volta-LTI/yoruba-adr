@@ -50,6 +50,7 @@ def _dynamic_dict(example, src_field, tgt_field):
     # Map source tokens to indices in the dynamic dict.
     src_map = torch.LongTensor([src_ex_vocab.stoi[w] for w in src])
     example["src_map"] = src_map
+    example["src_ex_vocab"] = src_ex_vocab
 
     if "tgt" in example:
         tgt = tgt_field.tokenize(example["tgt"])
@@ -151,3 +152,13 @@ class Dataset(TorchtextDataset):
         if remove_fields:
             self.fields = []
         torch.save(self, path)
+
+    @staticmethod
+    def config(fields):
+        readers, data, dirs = [], [], []
+        for name, field in fields:
+            if field["data"] is not None:
+                readers.append(field["reader"])
+                data.append((name, field["data"]))
+                dirs.append(field["dir"])
+        return readers, data, dirs

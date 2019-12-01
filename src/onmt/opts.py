@@ -60,10 +60,10 @@ def model_opts(parser):
     # Encoder-Decoder Options
     group = parser.add_argument_group('Model- Encoder-Decoder')
     group.add('--model_type', '-model_type', default='text',
-              choices=['text', 'img', 'audio'],
+              choices=['text', 'img', 'audio', 'vec'],
               help="Type of source model to use. Allows "
                    "the system to incorporate non-text inputs. "
-                   "Options are [text|img|audio].")
+                   "Options are [text|img|audio|vec].")
     group.add('--model_dtype', '-model_dtype', default='fp32',
               choices=['fp32', 'fp16'],
               help='Data type of the model.')
@@ -151,8 +151,25 @@ def model_opts(parser):
               help='Number of heads for transformer self-attention')
     group.add('--transformer_ff', '-transformer_ff', type=int, default=2048,
               help='Size of hidden transformer feed-forward')
+    group.add('--aan_useffn', '-aan_useffn', action="store_true",
+              help='Turn on the FFN layer in the AAN decoder')
+
+    # Alignement options
+    group = parser.add_argument_group('Model - Alignement')
+    group.add('--lambda_align', '-lambda_align', type=float, default=0.0,
+              help="Lambda value for alignement loss of Garg et al (2019)"
+                   "For more detailed information, see: "
+                   "https://arxiv.org/abs/1909.02074")
+    group.add('--alignment_layer', '-alignment_layer', type=int, default=-3,
+              help='Layer number which has to be supervised.')
+    group.add('--alignment_heads', '-alignment_heads', type=int, default=None,
+              help='N. of cross attention heads per layer to supervised with')
+    group.add('--full_context_alignment', '-full_context_alignment',
+              action="store_true",
+              help='Whether alignment is conditioned on full target context.')
 
     # Generator and loss options.
+    group = parser.add_argument_group('Generator')
     group.add('--copy_attn', '-copy_attn', action="store_true",
               help='Train copy attention layer.')
     group.add('--copy_attn_type', '-copy_attn_type',
@@ -174,11 +191,15 @@ def model_opts(parser):
               help="Divide copy loss by length of sequence")
     group.add('--coverage_attn', '-coverage_attn', action="store_true",
               help='Train a coverage attention layer.')
-    group.add('--lambda_coverage', '-lambda_coverage', type=float, default=1,
-              help='Lambda value for coverage.')
+    group.add('--lambda_coverage', '-lambda_coverage', type=float, default=0.0,
+              help='Lambda value for coverage loss of See et al (2017)')
     group.add('--loss_scale', '-loss_scale', type=float, default=0,
               help="For FP16 training, the static loss scale to use. If not "
                    "set, the loss scale is dynamically computed.")
+    group.add('--apex_opt_level', '-apex_opt_level', type=str, default="O1",
+              choices=["O0", "O1", "O2", "O3"],
+              help="For FP16 training, the opt_level to use."
+                   "See https://nvidia.github.io/apex/amp.html#opt-levels.")
 
 
 def preprocess_opts(parser):
@@ -187,16 +208,23 @@ def preprocess_opts(parser):
     group = parser.add_argument_group('Data')
     group.add('--data_type', '-data_type', default="text",
               help="Type of the source input. "
-                   "Options are [text|img|audio].")
+                   "Options are [text|img|audio|vec].")
 
-    group.add('--train_src', '-train_src', required=True,
-              help="Path to the training source data")
-    group.add('--train_tgt', '-train_tgt', required=True,
-              help="Path to the training target data")
+    group.add('--train_src', '-train_src', required=True, nargs='+',
+              help="Path(s) to the training source data")
+    group.add('--train_tgt', '-train_tgt', required=True, nargs='+',
+              help="Path(s) to the training target data")
+    group.add('--train_align', '-train_align', nargs='+', default=[None],
+              help="Path(s) to the training src-tgt alignment")
+    group.add('--train_ids', '-train_ids', nargs='+', default=[None],
+              help="ids to name training shards, used for corpus weighting")
+
     group.add('--valid_src', '-valid_src',
               help="Path to the validation source data")
     group.add('--valid_tgt', '-valid_tgt',
               help="Path to the validation target data")
+    group.add('--valid_align', '-valid_align', default=None,
+              help="Path(s) to the validation src-tgt alignment")
 
     group.add('--src_dir', '-src_dir', default="",
               help="Source directory for image or audio files.")
@@ -215,6 +243,12 @@ def preprocess_opts(parser):
                    "shard_size=0 means no segmentation "
                    "shard_size>0 means segment dataset into multiple shards, "
                    "each shard has shard_size samples")
+
+    group.add('--num_threads', '-num_threads', type=int, default=1,
+              help="Number of shards to build in parallel.")
+
+    group.add('--overwrite', '-overwrite', action="store_true",
+              help="Overwrite existing shards if any.")
 
     # Dictionary options, for text corpus
 
@@ -308,6 +342,12 @@ def train_opts(parser):
               help='Path prefix to the ".train.pt" and '
                    '".valid.pt" file path from preprocess.py')
 
+    group.add('--data_ids', '-data_ids', nargs='+', default=[None],
+              help="In case there are several corpora.")
+    group.add('--data_weights', '-data_weights', type=int, nargs='+',
+              default=[1], help="""Weights of different corpora,
+              should follow the same order as in -data_ids.""")
+
     group.add('--save_model', '-save_model', default='model',
               help="Model filename (the model will be saved as "
                    "<save_model>_N.pt where N is the number "
@@ -335,6 +375,8 @@ def train_opts(parser):
               help="IP of master for torch.distributed training.")
     group.add('--master_port', '-master_port', default=10000, type=int,
               help="Port of master for torch.distributed training.")
+    group.add('--queue_size', '-queue_size', default=400, type=int,
+              help="Size of queue for each process in producer/consumer")
 
     group.add('--seed', '-seed', type=int, default=-1,
               help="Random seed used for the experiments "
@@ -348,7 +390,7 @@ def train_opts(parser):
                    "Use 0 to not use initialization")
     group.add('--param_init_glorot', '-param_init_glorot', action='store_true',
               help="Init parameters with xavier_uniform. "
-                   "Required for transfomer.")
+                   "Required for transformer.")
 
     group.add('--train_from', '-train_from', default='', type=str,
               help="If training from a checkpoint then this is the "
@@ -382,6 +424,13 @@ def train_opts(parser):
               choices=["sents", "tokens"],
               help="Batch grouping for batch_size. Standard "
                    "is sents. Tokens will do dynamic batching")
+    group.add('--pool_factor', '-pool_factor', type=int, default=8192,
+              help="""Factor used in data loading and batch creations.
+              It will load the equivalent of `pool_factor` batches,
+              sort them by the according `sort_key` to produce
+              homogeneous batches and reduce padding, and yield
+              the produced batches in a shuffled way.
+              Inspired by torchtext's pool mechanism.""")
     group.add('--normalization', '-normalization', default='sents',
               choices=["sents", "tokens"],
               help='Normalization method of the gradient.')
@@ -426,8 +475,13 @@ def train_opts(parser):
               help="If the norm of the gradient vector exceeds this, "
                    "renormalize it to have the norm equal to "
                    "max_grad_norm")
-    group.add('--dropout', '-dropout', type=float, default=0.3,
+    group.add('--dropout', '-dropout', type=float, default=[0.3], nargs='+',
               help="Dropout probability; applied in LSTM stacks.")
+    group.add('--attention_dropout', '-attention_dropout', type=float,
+              default=[0.1], nargs='+',
+              help="Attention Dropout probability.")
+    group.add('--dropout_steps', '-dropout_steps', type=int, nargs='+',
+              default=[0], help="Steps at which dropout changes.")
     group.add('--truncated_decoder', '-truncated_decoder', type=int, default=0,
               help="""Truncated bptt.""")
     group.add('--adam_beta1', '-adam_beta1', type=float, default=0.9,
@@ -441,10 +495,9 @@ def train_opts(parser):
                    'Typically a value of 0.999 is recommended, as this is '
                    'the value suggested by the original paper describing '
                    'Adam, and is also the value adopted in other frameworks '
-                   'such as Tensorflow and Kerras, i.e. see: '
+                   'such as Tensorflow and Keras, i.e. see: '
                    'https://www.tensorflow.org/api_docs/python/tf/train/Adam'
-                   'Optimizer or '
-                   'https://keras.io/optimizers/ . '
+                   'Optimizer or https://keras.io/optimizers/ . '
                    'Whereas recently the paper "Attention is All You Need" '
                    'suggested a value of 0.98 for beta2, this parameter may '
                    'not work well for normal models / default '
@@ -505,10 +558,10 @@ def train_opts(parser):
               help="Send logs to this crayon server.")
     group.add('--exp', '-exp', type=str, default="",
               help="Name of the experiment for logging.")
-    # Use TensorboardX for visualization during training
+    # Use Tensorboard for visualization during training
     group.add('--tensorboard', '-tensorboard', action="store_true",
-              help="Use tensorboardX for visualization during training. "
-                   "Must have the library tensorboardX.")
+              help="Use tensorboard for visualization during training. "
+                   "Must have the library tensorboard >= 1.14.")
     group.add("--tensorboard_log_dir", "-tensorboard_log_dir",
               type=str, default="runs/onmt",
               help="Log directory for Tensorboard. "
@@ -569,6 +622,8 @@ def translate_opts(parser):
     group.add('--output', '-output', default='pred.txt',
               help="Path to output the predictions (each line will "
                    "be the decoded sequence")
+    group.add('--report_align', '-report_align', action='store_true',
+              help="Report alignment for each translation.")
     group.add('--report_bleu', '-report_bleu', action='store_true',
               help="Report bleu score after translation, "
                    "call tools/multi-bleu.perl on command line")
@@ -659,6 +714,8 @@ def translate_opts(parser):
               default="0")
     group.add('--attn_debug', '-attn_debug', action="store_true",
               help='Print best attn for each word')
+    group.add('--align_debug', '-align_debug', action="store_true",
+              help='Print best align for each word')
     group.add('--dump_beam', '-dump_beam', type=str, default="",
               help='File to dump beam information to.')
     group.add('--n_best', '-n_best', type=int, default=1,
@@ -668,6 +725,10 @@ def translate_opts(parser):
     group = parser.add_argument_group('Efficiency')
     group.add('--batch_size', '-batch_size', type=int, default=30,
               help='Batch size')
+    group.add('--batch_type', '-batch_type', default='sents',
+              choices=["sents", "tokens"],
+              help="Batch grouping for batch_size. Standard "
+                   "is sents. Tokens will do dynamic batching")
     group.add('--gpu', '-gpu', type=int, default=-1,
               help="Device to run on")
 
