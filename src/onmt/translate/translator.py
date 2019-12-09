@@ -350,6 +350,9 @@ class Translator(object):
         pred_score_total, pred_words_total = 0, 0
         gold_score_total, gold_words_total = 0, 0
 
+        # compute accuracy like we do during training across the entire test set (or single word)
+        total_correct_words, total_num_words = 0, 0
+
         all_scores = []
         all_predictions = []
 
@@ -369,6 +372,34 @@ class Translator(object):
                     gold_score_total += trans.gold_score
                     gold_words_total += len(trans.gold_sent) + 1
 
+                    ##################################################################
+                    # IOHAVOC - compute accuracy
+                    total_num_words += len(trans.gold_sent)
+
+                    assert(len(trans.pred_sents) == 1)
+                    n_best_preds = trans.pred_sents[0]
+
+                    if len(trans.gold_sent) != len(n_best_preds): # make sure we predicted the same num words
+                        # self._log("ERROR why??? ")
+                        # if "<unk>" in trans.gold_sent:
+                        #     self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
+                        # elif len(trans.gold_sent) > 0 and len(n_best_preds) > 0:
+                        #     self._log("UNEVEN LENGTHS")
+                        continue
+
+                    current_trans_correct = 0
+                    for i in range(len(trans.gold_sent)):
+                        if trans.gold_sent[i] == n_best_preds[i]:
+                            total_correct_words += 1
+                            current_trans_correct += 1
+
+                    # self._log("")
+                    # self._log("")
+                    # self._log("-----------------------------------")
+                    # self._log("num_correct_words: " + str(current_trans_correct))
+                    # self._log("num_words: " + str(len(trans.gold_sent)))
+                    ##################################################################
+
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
                 if self.report_align:
@@ -383,13 +414,13 @@ class Translator(object):
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
-                if self.verbose:
-                    sent_number = next(counter)
-                    output = trans.log(sent_number)
-                    if self.logger:
-                        self.logger.info(output)
-                    else:
-                        os.write(1, output.encode('utf-8'))
+                # if self.verbose:
+                #     sent_number = next(counter)
+                #     output = trans.log(sent_number)
+                #     if self.logger:
+                #         self.logger.info(output)
+                #     else:
+                #         os.write(1, output.encode('utf-8'))
 
                 if attn_debug:
                     preds = trans.pred_sents[0]
@@ -424,6 +455,14 @@ class Translator(object):
         end_time = time.time()
 
         if self.report_score:
+
+            self._log("-----------------------------------")
+            self._log("Running total correct_words: " + str(total_correct_words))
+            self._log("Running total num_words: " + str(total_num_words))
+            self._log("Accuracy (%): " + str(100 * (total_correct_words / total_num_words)))
+            self._log("-----------------------------------")
+
+
             msg = self._report_score('PRED', pred_score_total,
                                      pred_words_total)
             self._log(msg)
