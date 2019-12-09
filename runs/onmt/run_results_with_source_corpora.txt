@@ -1179,3 +1179,68 @@ Accuracy (%): 80.71165671708785
 -----------------------------------
 PRED AVG SCORE: -0.0924, PRED PPL: 1.0968
 GOLD AVG SCORE: -27.3489, GOLD PPL: 754156323478.1298
+
+
+
+--------------------------------------------
+--------------------------------------------
+--------------------------------------------
+--------------------------------------------
+New RC candidate with all text == 
+[2019-11-24 17:32:31,313 INFO] Validation perplexity: 1.36921
+[2019-11-24 17:32:31,313 INFO] Validation accuracy: 92.14
+[2019-11-24 17:32:31,313 INFO] Saving checkpoint models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_all_in_take1_step_100000.pt
+
+
+------------------------------------------------------------------
+This IS NOT LOOKING AUSPICIOUS .... 
+------------------------------------------------------------------
+
+iroro:~/github/yoruba-adr$ ./03_run_eval.sh
+Processing /Users/rebeiro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_all_in_take1_step_100000.pt file...
+[2019-12-08 22:45:17,833 INFO] Translating shard 0.
+-----------------------------------
+Running total correct_words: 14122
+Running total num_words: 30631
+Accuracy (%): 46.10362051516438
+-----------------------------------
+PRED AVG SCORE: -0.1756, PRED PPL: 1.1920
+GOLD AVG SCORE: -2.9470, GOLD PPL: 19.0492
+Processing /Users/rebeiro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_21000_no_kola_mistake.pt file...
+[2019-12-08 22:46:51,889 INFO] Translating shard 0.
+-----------------------------------
+Running total correct_words: 14768
+Running total num_words: 30631
+Accuracy (%): 48.21259508341223
+-----------------------------------
+PRED AVG SCORE: -0.3469, PRED PPL: 1.4147
+GOLD AVG SCORE: -8.8706, GOLD PPL: 7119.8687
+Processing /Users/rebeiro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_22500_keeper.pt file...
+[2019-12-08 22:47:49,133 INFO] Translating shard 0.
+-----------------------------------
+Running total correct_words: 14376
+Running total num_words: 30631
+Accuracy (%): 46.932845809800526
+-----------------------------------
+PRED AVG SCORE: -0.3153, PRED PPL: 1.3706
+GOLD AVG SCORE: -8.4306, GOLD PPL: 4585.1375
+Processing /Users/rebeiro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_step_90000_release.pt file...
+[2019-12-08 22:48:52,889 INFO] Translating shard 0.
+-----------------------------------
+Running total correct_words: 27075
+Running total num_words: 30631
+Accuracy (%): 88.39084587509386
+-----------------------------------
+PRED AVG SCORE: -0.0518, PRED PPL: 1.0532
+GOLD AVG SCORE: -1.3624, GOLD PPL: 3.9055
+Processing /Users/rebeiro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_256_1_1_step_100000.pt file...
+/Users/rebeiro/anaconda3/lib/python3.7/site-packages/torch/nn/modules/rnn.py:46: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.3 and num_layers=1
+  "num_layers={}".format(dropout, num_layers))
+[2019-12-08 22:49:51,158 INFO] Translating shard 0.
+-----------------------------------
+Running total correct_words: 5611
+Running total num_words: 30631
+Accuracy (%): 18.318043811824623
+-----------------------------------
+PRED AVG SCORE: -0.2119, PRED PPL: 1.2360
+GOLD AVG SCORE: -12.8885, GOLD PPL: 395752.0386
