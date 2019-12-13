@@ -22,12 +22,12 @@ python3 ./src/train.py \
     -save_model models/yo_adr_transformer \
     -save_checkpoint_steps 500 \
     -tensorboard  \
-    -encoder_type transformer
-    -decoder_type transformer
+    -encoder_type transformer \
+    -decoder_type transformer \
     -enc_layers 2 \
     -dec_layers 2 \
-    -rnn_size 512
-    -word_vec_size 512
+    -rnn_size 512 \
+    -word_vec_size 512 \
     -global_attention dot \
     -optim adam \
     -learning_rate 0.001 \
