@@ -76,7 +76,7 @@ def main():
 
     # Iroyin news_sites.txt evaluation dataset
     yoruba_evaluation_dataset = [
-        {"path": "Lesika/yoruba_words_sorted.txt",                           "train": 41584}
+        {"path": "Iroyin/news_sites.txt",                                "test": 1738}
     ]
 
     yoruba_reserve_text_corpora = [
@@ -90,12 +90,55 @@ def main():
     # training, validation & test texts
     training_text = []
     dev_text = []
+    test_text = []
 
     # Assemble public yoruba-text
     assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev_text)
+    # training_text += yoruba_lesika
 
     # Assemble private yoruba-text-reserve
     assemble_text_from(yoruba_reserve_text_corpora, yoruba_text_reserve_path, training_text, dev_text)
+
+    # read in text_text (so we can grab unigrams from it)
+    for item in yoruba_evaluation_dataset:
+        item_full_path = yoruba_text_path + "/" + item['path']
+        with open(item_full_path, 'r') as f:
+            x = f.read().splitlines()
+        test_text += x
+
+    # check all text
+    all_text = training_text + dev_text + test_text
+    print("training text len: " + str(len(training_text)))
+    print("dev text len: " + str(len(dev_text)))
+    print("test text len: " + str(len(test_text)))
+    print("all_text len: " + str(len(all_text)))
+
+    # make all_text to derive ngrams from
+    counts = {}
+    i = 0
+    for line in all_text:
+
+        if line.strip() == '':  # empty line case
+            continue
+
+        word_array = line.split()
+        if len(word_array) > 1:
+            for word in word_array:
+                if word not in counts:
+                    counts[word] = 1
+                else:
+                    counts[word] += 1
+        else:
+            word = line         # single word in a line case
+            if word not in counts:
+                counts[word] = 1
+            else:
+                counts[word] += 1
+        i+=1
+
+    for word in counts:
+        print(word, counts[word])
+    ######################################################################
 
     # Write files to disk
     with open(aggregated_train_text_path, 'w') as file_handler:
@@ -113,7 +156,6 @@ def main():
 
 
 def assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev_text):
-
     for item in yoruba_text_corpora:
         item_full_path = yoruba_text_path + "/" + item['path']
         with open(item_full_path, 'r') as f:
@@ -135,7 +177,6 @@ NUM = "<NUM>"
 
 
 def skip(line):
-
     # collapse empty lines
     if line.strip() == "":
         return True
