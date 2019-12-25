@@ -92,29 +92,10 @@ def main():
     dev_text = []
 
     # Assemble public yoruba-text
-    for item in yoruba_text_corpora:
-        item_full_path = yoruba_text_path + "/" + item['path']
-        with open(item_full_path, 'r') as f:
-            x = f.read().splitlines()
+    assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev_text)
 
-        print(item['path'], str(len(x) - 1))
-        assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
-
-        # copy texts
-        training_text += x[:item['train']]
-        dev_text += x[item['train']:item['train'] + item['dev']]
-
-    # Assemble private yoruba-text-reserve (used with permission, but not public domain, or open-source)
-    for item in yoruba_reserve_text_corpora:
-        item_full_path = yoruba_text_reserve_path + "/" + item['path']
-        with open(item_full_path, 'r') as f:
-            x = f.read().splitlines()
-
-        print(item['path'], str(len(x) - 1))
-        assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
-
-        training_text += x[:item['train']]
-        dev_text += x[item['train']:item['train'] + item['dev']]
+    # Assemble private yoruba-text-reserve
+    assemble_text_from(yoruba_reserve_text_corpora, yoruba_text_reserve_path, training_text, dev_text)
 
     # Write files to disk
     with open(aggregated_train_text_path, 'w') as file_handler:
@@ -129,6 +110,21 @@ def main():
     make_parallel_text(aggregated_train_text_path, base_dir_path + "/data/train/", 5, 100)
     make_parallel_text(aggregated_dev_text_path, base_dir_path + "/data/dev/", 5, 100)
     make_parallel_text(test_text_path, base_dir_path + "/data/test/", 5, 100)
+
+
+def assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev_text):
+
+    for item in yoruba_text_corpora:
+        item_full_path = yoruba_text_path + "/" + item['path']
+        with open(item_full_path, 'r') as f:
+            x = f.read().splitlines()
+
+        print(item['path'], str(len(x) - 1))
+        assert item['train'] + item['dev'] == len(x) - 1  # because len() is not zero based indexing
+
+        # copy texts
+        training_text += x[:item['train']]
+        dev_text += x[item['train']:item['train'] + item['dev']]
 
 
 forbidden_symbols = re.compile(r"[\[\]\(\)\/\\\>\<\=\+\_\*]")
@@ -222,6 +218,7 @@ def make_data(source_file, min_len, max_len):
             yield " ".join([ránlọ.strip_accents_text(token) for token in target_tokens]), " ".join(
                 target_tokens
             )
+
 
 def write_parallel_text(sources, targets, output_prefix):
     """
