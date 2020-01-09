@@ -61,12 +61,16 @@ def main():
         {"path": "LagosNWU/all_transcripts.txt",                             "train": 3883,  "dev": 432},
         {"path": "TheYorubaBlog/theyorubablog_dot_com.txt",                  "train": 3721,  "dev": 414},
         {"path": "Asubiaro_LangID/langid_combined_training_test_corpus.txt", "train": 4791,  "dev": 533},
-        {"path": "Iroyin/yoglobalvoices.txt",                                "train": 557,   "dev": 61},
         {"path": "Bibeli_Mimo/biblica.txt",                                  "train": 27738, "dev": 3083},
         {"path": "Bibeli_Mimo/bsn.txt",                                      "train": 29033, "dev": 3226},
         {"path": "Owe/owe.txt",                                              "train": 2429,  "dev": 271},
         {"path": "JW300/jw300.yo.txt",                                       "train": 470237, "dev": 4749},
-        {"path": "Universal_Declaration_Human_Rights/unhr.yo.txt",           "train": 134,    "dev": 15}
+        {"path": "Universal_Declaration_Human_Rights/unhr.yo.txt",           "train": 134,    "dev": 15},
+        {"path": "Alabi_YorubaTwi_Embedding/alakowe.txt",                    "train": 648, "dev": 72},
+        {"path": "Alabi_YorubaTwi_Embedding/edeyorubarewa.txt",              "train": 114, "dev": 13},
+        {"path": "Alabi_YorubaTwi_Embedding/igbo_olodumare.txt",             "train": 533, "dev": 60},
+        {"path": "Alabi_YorubaTwi_Embedding/irinkerindo_ninu_igbo.txt",      "train": 621, "dev": 70},
+        {"path": "Alabi_YorubaTwi_Embedding/oroyoruba.txt",                  "train": 1434, "dev": 160}
     ]
 
     # Lexicon and texts derived from computing most common trigrams, bigrams, etc
@@ -76,7 +80,8 @@ def main():
 
     # Iroyin news_sites.txt evaluation dataset
     yoruba_evaluation_dataset = [
-        {"path": "Iroyin/news_sites.txt",                                "test": 1738}
+        # {"path": "Iroyin/news_sites.txt",                                "test": 1738}
+        {"path": "Iroyin/yoglobalvoices.txt",                              "test": 618}
     ]
 
     yoruba_reserve_text_corpora = [
