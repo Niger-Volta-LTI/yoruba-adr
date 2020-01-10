@@ -73,22 +73,25 @@ def main():
         {"path": "Alabi_YorubaTwi_Embedding/oroyoruba.txt",                  "train": 1434, "dev": 160}
     ]
 
-    # Lexicon and texts derived from computing most common trigrams, bigrams, etc
-    yoruba_lesika = [
-        {"path": "Lesika/yoruba_words_sorted.txt",                           "train": 41584}
-    ]
-
-    # Iroyin news_sites.txt evaluation dataset
-    yoruba_evaluation_dataset = [
-        # {"path": "Iroyin/news_sites.txt",                                "test": 1738}
-        {"path": "Iroyin/yoglobalvoices.txt",                              "test": 618}
-    ]
-
     yoruba_reserve_text_corpora = [
         {"path": "Kola_Tubosun/Interviews/kola_corpus.txt",    "train": 3479,  "dev": 387},
         {"path": "Kola_Tubosun/201906_corpus/Kola_201906.txt", "train": 629,   "dev": 70},
         {"path": "Timi_Wuraola/HÁÀ_ÈNÌYÀN_edited_wuraola.txt", "train": 1499,  "dev": 167}
     ]
+
+    # Lexicon and texts derived from computing most common trigrams, bigrams, etc
+    yoruba_lesika = [
+        {"path": "Lesika/yoruba_words_sorted.txt",                           "train": 41584}
+    ]
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    # Iroyin yoglobalvoices test/evaluation dataset
+    yoruba_evaluation_dataset = [
+        # {"path": "Iroyin/news_sites.txt",                                "test": 1738}
+        {"path": "Iroyin/yoglobalvoices.txt",                              "test": 618}
+    ]
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -99,10 +102,15 @@ def main():
 
     # Assemble public yoruba-text
     assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev_text)
-    # training_text += yoruba_lesika
 
     # Assemble private yoruba-text-reserve
     assemble_text_from(yoruba_reserve_text_corpora, yoruba_text_reserve_path, training_text, dev_text)
+
+    # training_text += yoruba_lesika
+    item_full_path = yoruba_text_path + "/" + yoruba_lesika[0]['path']
+    with open(item_full_path, 'r') as f:
+        x = f.read().splitlines()
+        training_text += x
 
     # read in text_text (so we can grab unigrams from it)
     for item in yoruba_evaluation_dataset:
@@ -122,9 +130,11 @@ def main():
     counts = {}
     i = 0
     for line in all_text:
-
         if line.strip() == '':  # empty line case
             continue
+
+        # clean up
+        line = sanitize_line(line)
 
         word_array = line.split()
         if len(word_array) > 1:
@@ -143,8 +153,12 @@ def main():
 
     print("Word count == " + str(len(counts)))
     sorted_counts = sorted(counts.items(), key=lambda item: item[1], reverse=True)
-    for word, frequency in sorted_counts:
-        print("%s %d" % (word, frequency))
+    # for word, frequency in sorted_counts:
+    #     print("%s %d" % (word, frequency))
+
+    # Add all_text-derived Lesika to training text
+    training_text += list(counts.keys())
+
 
     ######################################################################
 
@@ -177,12 +191,17 @@ def assemble_text_from(yoruba_text_corpora, yoruba_text_path, training_text, dev
         dev_text += x[item['train']:item['train'] + item['dev']]
 
 
-forbidden_symbols = re.compile(r"[\[\]\(\)\/\\\>\<\=\+\_\*]")
+forbidden_symbols = re.compile(r"[\[\]\(\)\/\\\>\<\=\+\_\*\”\“\‘]")
 numbers = re.compile(r"\d")
 multiple_punct = re.compile(r"([\.\?\!\,\:\;\-])(?:[\.\?\!\,\:\;\-]){1,}")
 is_number = lambda x: len(numbers.sub("", x)) / len(x) < 0.6
 NUM = "<NUM>"
 
+
+def sanitize_line(line):
+    lower_line = line.lower()
+    # return re.sub(r'[^a-zA-Z_\s]+', '', lower_line)
+    return re.sub(r'\W+', ' ', lower_line)
 
 def skip(line):
     # collapse empty lines
