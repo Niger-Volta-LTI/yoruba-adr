@@ -141,8 +141,11 @@ def main():
                 counts[word] += 1
         i+=1
 
-    for word in counts:
-        print(word, counts[word])
+    print("Word count == " + str(len(counts)))
+    sorted_counts = sorted(counts.items(), key=lambda item: item[1], reverse=True)
+    for word, frequency in sorted_counts:
+        print("%s %d" % (word, frequency))
+
     ######################################################################
 
     # Write files to disk
