@@ -125,7 +125,7 @@ class Translator(object):
             phrase_table="",
             data_type="text",
             verbose=False,
-            report_bleu=False,
+            report_bleu=True,
             report_rouge=False,
             report_time=False,
             copy_attn=False,
@@ -358,6 +358,8 @@ class Translator(object):
 
         start_time = time.time()
 
+        skipped = 0
+        total_num_utts = 0
         for batch in data_iter:
             batch_data = self.translate_batch(
                 batch, data.src_vocabs, attn_debug
@@ -374,30 +376,42 @@ class Translator(object):
 
                     ##################################################################
                     # IOHAVOC - compute accuracy
-                    total_num_words += len(trans.gold_sent)
+                    target_sentence = trans.gold_sent  # data_iter.batches[0][0].tgt[0]   ### <<----- this only works for once
+                    total_num_utts += 1
+                    # if "<unk>" in target_sentence:
+                    #     self._log("<UNK> in target_sentence .. skipping")
+                    #     skipped += 1
+                    #     continue
+
+                    # by summing here you count UNKS, when you want to discount unks
+                    stopwords = ['<unk>']
+                    target_sentence_for_not_counting_unks = [word for word in trans.gold_sent if word not in stopwords]
+                    total_num_words += len(target_sentence_for_not_counting_unks)
 
                     assert(len(trans.pred_sents) == 1)
                     n_best_preds = trans.pred_sents[0]
 
-                    if len(trans.gold_sent) != len(n_best_preds): # make sure we predicted the same num words
-                        # self._log("ERROR why??? ")
-                        # if "<unk>" in trans.gold_sent:
-                        #     self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
-                        # elif len(trans.gold_sent) > 0 and len(n_best_preds) > 0:
-                        #     self._log("UNEVEN LENGTHS")
+                    if len(target_sentence) != len(n_best_preds): # make sure we predicted the same num words
+                        self._log("ERROR why??? ")
+                        if "<unk>" in target_sentence:
+                            self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
+                        elif len(target_sentence) > 0 and len(n_best_preds) > 0:
+                            self._log("UNEVEN LENGTHS")
                         continue
 
                     current_trans_correct = 0
-                    for i in range(len(trans.gold_sent)):
-                        if trans.gold_sent[i] == n_best_preds[i]:
+                    for i in range(len(target_sentence)):
+                        if target_sentence[i] == "<unk>":
+                            continue
+                        if target_sentence[i] == n_best_preds[i]:
                             total_correct_words += 1
                             current_trans_correct += 1
 
-                    # self._log("")
-                    # self._log("")
-                    # self._log("-----------------------------------")
-                    # self._log("num_correct_words: " + str(current_trans_correct))
-                    # self._log("num_words: " + str(len(trans.gold_sent)))
+                    self._log("")
+                    self._log("")
+                    self._log("-----------------------------------")
+                    self._log("num_correct_words: " + str(current_trans_correct))
+                    self._log("num_words: " + str(len(target_sentence_for_not_counting_unks)))
                     ##################################################################
 
                 n_best_preds = [" ".join(pred)
@@ -414,13 +428,15 @@ class Translator(object):
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
-                # if self.verbose:
-                #     sent_number = next(counter)
-                #     output = trans.log(sent_number)
-                #     if self.logger:
-                #         self.logger.info(output)
-                #     else:
-                #         os.write(1, output.encode('utf-8'))
+                # IOHAVOC UNCOMMENT THIS FOR ERROR ANALYSES & TO SEE EACH UTTERANCES RESULTS
+                if self.verbose:
+                    sent_number = next(counter)
+                    output = trans.log(sent_number)
+                    if self.logger:
+                        self.logger.info(output)
+                    else:
+                        os.write(1, output.encode('utf-8'))
+                    print("TARGET: " + " ".join(target_sentence))
 
                 if attn_debug:
                     preds = trans.pred_sents[0]
@@ -455,21 +471,21 @@ class Translator(object):
         end_time = time.time()
 
         if self.report_score:
-
             self._log("-----------------------------------")
             self._log("Running total correct_words: " + str(total_correct_words))
             self._log("Running total num_words: " + str(total_num_words))
             self._log("Accuracy (%): " + str(100 * (total_correct_words / total_num_words)))
             self._log("-----------------------------------")
 
-
-            msg = self._report_score('PRED', pred_score_total,
-                                     pred_words_total)
+            print("\nskipped: " + str(skipped))
+            print("total_num_utts: " + str(total_num_utts))
+            msg = self._report_score('PRED', pred_score_total, pred_words_total)
             self._log(msg)
+
             if tgt is not None:
-                msg = self._report_score('GOLD', gold_score_total,
-                                         gold_words_total)
-                self._log(msg)
+                # GOLD SCORE IS ANNOYING
+                # msg = self._report_score('GOLD', gold_score_total, gold_words_total)
+                # self._log(msg)
                 if self.report_bleu:
                     msg = self._report_bleu(tgt)
                     self._log(msg)
@@ -480,10 +496,8 @@ class Translator(object):
         if self.report_time:
             total_time = end_time - start_time
             self._log("Total translation time (s): %f" % total_time)
-            self._log("Average translation time (s): %f" % (
-                total_time / len(all_predictions)))
-            self._log("Tokens per second: %f" % (
-                pred_words_total / total_time))
+            self._log("Average translation time (s): %f" % (total_time / len(all_predictions)))
+            self._log("Tokens per second: %f" % (pred_words_total / total_time))
 
         if self.dump_beam:
             import json
