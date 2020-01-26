@@ -3,6 +3,13 @@
 echo "[INFO] aggregate sources from yoruba-text, split & strip to make parallel text"
 python3 ./src/aggregate_corpora_make_parallel_text.py
 
+if [ $? -eq 0 ]; then
+    echo "OKAY"
+else
+    echo "TRAINING PREPROCESSING FAIL"
+    exit 1
+fi
+
 echo "[INFO] remove old tensorboard runs, and preprocessed files"
 rm data/*.pt
 

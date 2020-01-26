@@ -43,15 +43,24 @@ def main():
     # aggregated & split text paths
     aggregated_train_text_path = base_dir_path + "/data/train/combined_train.txt"
     aggregated_dev_text_path   = base_dir_path + "/data/dev/combined_dev.txt"
-    test_text_path             = base_dir_path + "/data/test/news_sites.targets.txt"
+    test_text_path             = base_dir_path + "/data/test/yoglobalvoices.txt"
 
     try:
+        directory = path.split(path.abspath(aggregated_train_text_path))[0]
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-        os.makedirs(path.split(path.abspath(aggregated_train_text_path))[0])
-        os.makedirs(path.split(path.abspath(aggregated_dev_text_path))[0])
-        os.makedirs(path.split(path.abspath(test_text_path))[0])
-    except OSError:
-        print("[ERROR] could not make paths for combined text")
+        directory = path.split(path.abspath(aggregated_dev_text_path))[0]
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        directory = path.split(path.abspath(test_text_path))[0]
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+    except OSError as e:
+        print("[ERROR] could not make paths for combined text " + str(e))
+        exit(1)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -125,6 +134,14 @@ def main():
     print("dev text len: " + str(len(dev_text)))
     print("test text len: " + str(len(test_text)))
     print("all_text len: " + str(len(all_text)))
+
+    # if all_text isn't NFC hard bail out
+
+    if not ránlọ.is_text_nfc(" ".join(all_text)):
+        print("********************************")
+        print("* CORPORA TEXT IS NOT FULLY NFC")
+        print("********************************")
+        exit(-99999999999)
 
     # make all_text to derive ngrams from
     counts = {}
