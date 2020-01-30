@@ -360,12 +360,14 @@ class Translator(object):
 
         skipped = 0
         total_num_utts = 0
+        batch_index = 0
         for batch in data_iter:
             batch_data = self.translate_batch(
                 batch, data.src_vocabs, attn_debug
             )
             translations = xlation_builder.from_batch(batch_data)
 
+            trans_index = 0
             for trans in translations:
                 all_scores += [trans.pred_scores[:self.n_best]]
                 pred_score_total += trans.pred_scores[0]
@@ -376,17 +378,23 @@ class Translator(object):
 
                     ##################################################################
                     # IOHAVOC - compute accuracy
-                    target_sentence = trans.gold_sent  # data_iter.batches[0][0].tgt[0]   ### <<----- this only works for once
+                    #                                  data_iter.batches[batch][trans_i].tgt[0]
+                    # target_sentence = trans.gold_sent  # data_iter.batches[0][0].tgt[0]   ### <<----- this only works for once
+                    # target_sentence = data_iter.batches[batch_index][trans_index].tgt[0]
+                    target_sentence = trans.gold_sent
                     total_num_utts += 1
+
                     # if "<unk>" in target_sentence:
                     #     self._log("<UNK> in target_sentence .. skipping")
                     #     skipped += 1
                     #     continue
 
                     # by summing here you count UNKS, when you want to discount unks
-                    stopwords = ['<unk>']
-                    target_sentence_for_not_counting_unks = [word for word in trans.gold_sent if word not in stopwords]
-                    total_num_words += len(target_sentence_for_not_counting_unks)
+                    # if True:  # style 2
+                    #     stopwords = ['<unk>']
+                    #     target_sentence_for_not_counting_unks = [word for word in trans.gold_sent if word not in stopwords]
+                    #     total_num_words += len(target_sentence_for_not_counting_unks)
+                    # else:  # style 1
 
                     assert(len(trans.pred_sents) == 1)
                     n_best_preds = trans.pred_sents[0]
@@ -396,7 +404,7 @@ class Translator(object):
                         if "<unk>" in target_sentence:
                             self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
                         elif len(target_sentence) > 0 and len(n_best_preds) > 0:
-                            self._log("UNEVEN LENGTHS")
+                            self._log("UNEVEN LENGTHS => " + str(target_sentence) + " + =>" + str(n_best_preds))
                         continue
 
                     current_trans_correct = 0
@@ -406,12 +414,19 @@ class Translator(object):
                         if target_sentence[i] == n_best_preds[i]:
                             total_correct_words += 1
                             current_trans_correct += 1
+                        else:
+                            print("error words: " + target_sentence[i] + " " + n_best_preds[i])
+
+                    total_num_words += len(target_sentence)
 
                     self._log("")
                     self._log("")
                     self._log("-----------------------------------")
                     self._log("num_correct_words: " + str(current_trans_correct))
-                    self._log("num_words: " + str(len(target_sentence_for_not_counting_unks)))
+                    # self._log("num_words: " + str(len(target_sentence_for_not_counting_unks)))
+                    self._log("num_words: " + str(len(target_sentence)))
+                    # self._log("num_words: " + str(len(trans.gold_sent)))
+
                     ##################################################################
 
                 n_best_preds = [" ".join(pred)
