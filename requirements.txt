@@ -6,3 +6,4 @@ future
 configargparse
 tensorboardX
 nltk
+iranlowo
