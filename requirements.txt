@@ -4,6 +4,7 @@ torch==1.2.0
 git+https://github.com/pytorch/text
 future
 configargparse
+tensorboard
 tensorboardX
 nltk
 iranlowo
