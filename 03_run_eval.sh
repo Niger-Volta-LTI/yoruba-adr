@@ -22,7 +22,7 @@
 
 # ========================================================================================
 # Accuracy (%): 58.203696316979126
-FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_22500_keeper.pt
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_iroyin_step_22500_keeper.pt
 
 # (Nov 6th, 2019) Good model what we originally intended 22500 -- NO IROYIN
 # CORPUS: {LagosNWUspeech_corpus, TheYorubaBlog_corpus, BibeliYoruba_corpus, Toluwase/Word-Level-Language-Identification-for-Resource-Scarce-, Kọ́lá Túbọ̀sún interiews}
@@ -31,6 +31,42 @@ FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_ir
 # NFC OK!! because Kola's second interview isn't in here yet
 
 # ========================================================================================
+# Accuracy (%): 72.43340918217106
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_100000.pt
+# Accuracy (%): 72.97166216309844
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_79500.pt
+# Accuracy (%): 73.04896447675216
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_80500.pt
+# Accuracy (%): 72.37981881901739
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_95000.pt
+#Accuracy (%): 72.48129342597541
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_92500.pt
+# Accuracy (%): 72.51117431938236
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_91500.pt
+# Accuracy (%): 72.69489247311827
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_91000.pt
+
+#Accuracy (%): 72.30301427815971
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_85000.pt
+# Accuracy (%): 72.47736954206603
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_87500.pt
+
+#Accuracy (%): 72.134166392634
+#FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_88500.pt
+
+# Accuracy (%): 72.87628375161532
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_89500.pt
+
+# TOPBOY
+# Accuracy (%): 73.34699453551913
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_90000.pt
+
+# Accuracy (%): 73.0543470754782
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_90500.pt
+
+############
+# Accuracy (%): 62.20488747756454
+FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_30000.pt
 
 
 for f in $FILES

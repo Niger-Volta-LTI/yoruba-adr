@@ -24,7 +24,7 @@ python3 ./src/preprocess.py -train_src ./data/train/sources.txt \
                         -save_data ./data/demo
 
 echo "[INFO] running Bahdanau seq2seq training, for GPU training add: -gpuid 0 "
-# python3 ./src/train.py -gpuid 0 \
+# python3 ./src/train.py -world_size 1 -gpu_ranks 0 \
 python3 ./src/train.py \
     -data data/demo \
     -save_model models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take2 \
