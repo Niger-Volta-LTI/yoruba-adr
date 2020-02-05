@@ -57,16 +57,90 @@
 # Accuracy (%): 72.87628375161532
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_89500.pt
 
-# TOPBOY
+# TOPBOY ############
 # Accuracy (%): 73.34699453551913
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_90000.pt
 
 # Accuracy (%): 73.0543470754782
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan30_EC2_step_90500.pt
 
+# ========================================================================================
 ############
+# bahdanau SANS JW300
+# Accuracy (%): 62.872217403873954
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_40000.pt
+
+# Accuracy (%): 62.28550018733608
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_10000.pt
+
+
+# Accuracy (%): 63.63151884278645
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_20000.pt
+
+# Accuracy (%): 62.519213034122345
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_22500.pt
+
+# Accuracy (%): 63.86027418480366
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_23000.pt
+
+# TOPBOY ############
+# Accuracy (%): 64.88090589613432
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_23500.pt
+
+# Accuracy (%): 63.52005782435851
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_24000.pt
+
+# Accuracy (%): 63.985906862745104
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_25000.pt
+
+# Accuracy (%): 62.33470467234793
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_27500.pt
+
 # Accuracy (%): 62.20488747756454
-FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_30000.pt
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_30000.pt
+
+# Accuracy (%): 62.49199459190209
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_jan31_no_JW300_EC2_step_26000.pt
+
+# ========================================================================================
+############
+# TRANSFORMER SANS JW300
+# Accuracy (%): 72.05630587787711
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_10000.pt
+
+# Accuracy (%): 73.11475409836066
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_12000.pt
+
+############ TOPBOY 1
+# Accuracy (%): 73.99654311503745
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_12500.pt
+
+#Accuracy (%): 71.15181401902079
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_13000.pt
+
+# Accuracy (%): 73.87867647058823
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_13500.pt
+
+# Accuracy (%): 72.00752393980848
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_14500.pt
+
+############ TOPBOY
+# Accuracy (%): 73.99738854691289
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_15500.pt
+
+# Accuracy (%): 72.50434782608696
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb1_no_JW300_EC2_step_16000.pt
+# ========================================================================================
+
+# ========================================================================================
+############
+# TRANSFORMER ALL IN
+# Accuracy (%): 77.8399552322328
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_13500.pt
+
+# 90.7028
+models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_21500.pt
+
 
 
 for f in $FILES
