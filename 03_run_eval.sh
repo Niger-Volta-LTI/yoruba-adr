@@ -138,13 +138,14 @@
 # Accuracy (%): 77.8399552322328
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_13500.pt
 
+############ TOPBOY
 # Accuracy (%): 79.36962750716332
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_21500.pt
 
 # Accuracy (%): 79.28860873480414
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_23500.pt
 
-#
+# Accuracy (%): 79.1218377435301
 FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_16500.pt
 
 # Accuracy (%): 78.79742304939155
