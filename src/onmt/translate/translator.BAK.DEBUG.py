@@ -380,8 +380,8 @@ class Translator(object):
                     # IOHAVOC - compute accuracy
                     #                                  data_iter.batches[batch][trans_i].tgt[0]
                     # target_sentence = trans.gold_sent  # data_iter.batches[0][0].tgt[0]   ### <<----- this only works for once
-                    # target_sentence = data_iter.batches[batch_index][trans_index].tgt[0]
-                    target_sentence = trans.gold_sent
+                    target_sentence = data_iter.batches[batch_index][trans_index].tgt[0]
+
                     total_num_utts += 1
 
                     # if "<unk>" in target_sentence:
@@ -400,12 +400,11 @@ class Translator(object):
                     n_best_preds = trans.pred_sents[0]
 
                     if len(target_sentence) != len(n_best_preds): # make sure we predicted the same num words
-                        # IOHAVOC FEB9 EVAL
-                        # self._log("ERROR why??? ")
-                        # if "<unk>" in target_sentence:
-                        #     self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
-                        # elif len(target_sentence) > 0 and len(n_best_preds) > 0:
-                        #     self._log("UNEVEN LENGTHS => " + str(target_sentence) + " + =>" + str(n_best_preds))
+                        self._log("ERROR why??? ")
+                        if "<unk>" in target_sentence:
+                            self._log("<UNK> in PHRASE, test set vocab mismatch is messing up predictions")
+                        elif len(target_sentence) > 0 and len(n_best_preds) > 0:
+                            self._log("UNEVEN LENGTHS")
                         continue
 
                     current_trans_correct = 0
@@ -416,20 +415,17 @@ class Translator(object):
                             total_correct_words += 1
                             current_trans_correct += 1
                         else:
-                            if False: # IOHAVOC FEB9 EVAL
-                                print("error words: " + target_sentence[i] + " " + n_best_preds[i])
+                            print("error words: " + target_sentence[i] + " " + n_best_preds[i])
 
                     total_num_words += len(target_sentence)
 
-                    # IOHAVOC FEB9 EVAL
-                    #
-                    # self._log("")
-                    # self._log("")
-                    # self._log("-----------------------------------")
-                    # self._log("num_correct_words: " + str(current_trans_correct))
-                    # # self._log("num_words: " + str(len(target_sentence_for_not_counting_unks)))
-                    # self._log("num_words: " + str(len(target_sentence)))
-                    # # self._log("num_words: " + str(len(trans.gold_sent)))
+                    self._log("")
+                    self._log("")
+                    self._log("-----------------------------------")
+                    self._log("num_correct_words: " + str(current_trans_correct))
+                    # self._log("num_words: " + str(len(target_sentence_for_not_counting_unks)))
+                    self._log("num_words: " + str(len(target_sentence)))
+                    # self._log("num_words: " + str(len(trans.gold_sent)))
 
                     ##################################################################
 
@@ -447,16 +443,15 @@ class Translator(object):
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
-                # IOHAVOC FEB9 EVAL
                 # IOHAVOC UNCOMMENT THIS FOR ERROR ANALYSES & TO SEE EACH UTTERANCES RESULTS
-                # if self.verbose:
-                #     sent_number = next(counter)
-                #     output = trans.log(sent_number)
-                #     if self.logger:
-                #         self.logger.info(output)
-                #     else:
-                #         os.write(1, output.encode('utf-8'))
-                #     print("TARGET: " + " ".join(target_sentence))
+                if self.verbose:
+                    sent_number = next(counter)
+                    output = trans.log(sent_number)
+                    if self.logger:
+                        self.logger.info(output)
+                    else:
+                        os.write(1, output.encode('utf-8'))
+                    print("TARGET: " + " ".join(target_sentence))
 
                 if attn_debug:
                     preds = trans.pred_sents[0]
