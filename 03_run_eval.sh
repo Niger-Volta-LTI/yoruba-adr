@@ -146,12 +146,28 @@
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_23500.pt
 
 # Accuracy (%): 79.1218377435301
-FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_16500.pt
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_16500.pt
 
 # Accuracy (%): 78.79742304939155
 # FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb2_EC2_step_17500.pt
 
 
+# ========================================================================================
+############
+# TRANSFORMER + FASTTEXT EMBEDDING
+
+# FILES=/Users/iroro/github/yoruba-adr/models/embeddings_results_transformer_feb8/*.pt
+############ TOPBOY
+# Accuracy (%): 81.32315521628499
+# /Users/iroro/github/yoruba-adr/models/embeddings_results_transformer_feb8/yo_adr_transformer_sans_yoglobalvoices_all_in_take3_feb8_EC2_step_18500.pt file...
+
+
+# ========================================================================================
+############
+# bahdanau + FASTTEXT EMBEDDING
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_feb9_fasttext_EC2_step_*.pt
+# Processing /Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_feb9_fasttext_EC2_step_93500.pt file...
+# Accuracy (%): 71.10906645905585
 
 
 for f in $FILES
