@@ -45,10 +45,10 @@ TEST SET: Global Voices from David
 
 # ========================================================================================
 # (Feb9, 2020) Bahdanau soft-attention model + FastText Embedding
-# PRED PPL: 1.3422
-# >> BLEU = 58.34, 79.5/64.2/52.5/43.4 (BP=0.999, ratio=0.999, hyp_len=16376, ref_len=16391)
+#  PRED PPL: 1.3923
+# >> BLEU = 58.87, 79.8/64.7/53.1/44.1 (BP=0.998, ratio=0.998, hyp_len=16362, ref_len=16391)
 
-# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_feb9_fasttext_EC2_step_93500.pt
+# FILES=/Users/iroro/github/yoruba-adr/models/yo_adr_bahdanau_lstm_128_2_2_sans_yoglobalvoices_all_in_take3_feb9_fasttext_EC2_step_91500.pt.pt
 # CORPUS: all-new-data, no Global Voices
 
 # ========================================================================================
