@@ -1,7 +1,7 @@
 # Automatic Diacritic Restoration of Yorùbá Text
 
 ### Motivations
-Nigeria’s [dying languages](https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last)
+Nigeria’s [dying languages](https://www.vanguardngr.com/2017/02/nigerias-dying-languages-warri-carry-last)!
 
 ### Applications
 
@@ -21,12 +21,12 @@ Nigeria’s [dying languages](https://www.vanguardngr.com/2017/02/nigerias-dying
 
 ### Pretrained ADR Models
  * [New Pretrained Models (April 2020)](https://drive.google.com/drive/folders/1it32dyOHZWAeT7QDoTj-6qpo3b5addHT?usp=sharing) →  [Evaluation Results](https://github.com/Niger-Volta-LTI/yoruba-adr/blob/master/results/README.txt)
- * [Older Soft-attention models (March/June 2019)](https://bintray.com/ruohoruotsi/prebuilt-models/adr-models)
+ * [Older soft-attention models (March/June 2019)](https://bintray.com/ruohoruotsi/prebuilt-models/adr-models)
 
 ### Datasets
 [https://github.com/Niger-Volta-LTI/yoruba-text](https://github.com/Niger-Volta-LTI/yoruba-text)
 
----
+
 ## Train a Yorùbá ADR model
 
 ### Dependencies
