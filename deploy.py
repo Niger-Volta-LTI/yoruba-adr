@@ -32,7 +32,6 @@ def deploy(instance_count):
             sagemaker_session=sagemaker_session,
             framework_version='1.5.0',
             role=role,
-            source_dir="/Users/owahab/Desktop/personal/niger-volta/yoruba-adr/onmt",
             entry_point='translate.py')
 
         predictor = pytorch_model.deploy(
