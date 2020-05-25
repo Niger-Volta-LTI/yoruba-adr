@@ -1,0 +1,11 @@
+environments:
+  default: &default
+    model_name: yoruba-adr-demo-deploy
+  local:
+    <<: *default
+    instance_type: local
+    model_data_path: '/Users/owahab/Desktop/personal/niger-volta/yoruba-adr/deployment/model.tar.gz'
+  production:
+    <<: *default
+    instance_type: ml.t2.medium
+    model_data_path: s3://sagemaker-pytorch-text-classification/model.tar.gz
